@@ -1,0 +1,209 @@
+﻿@model FashionStore.Models.LoginModel
+
+@{
+    ViewBag.Title = "Đăng nhập";
+    Layout = "~/Views/Shared/_LayoutClient2.cshtml";
+}
+
+<style>
+    @@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap');
+
+    .custom-login-container {
+        max-width: 450px; /* Tăng kích thước form */
+        margin: 50px auto;
+        padding: 40px; /* Tăng padding */
+        background: white;
+        border-radius: 12px;
+        box-shadow: 0 0 25px rgba(0,0,0,0.1);
+        font-family: 'Poppins', sans-serif;
+    }
+
+    .custom-login-container .login-header {
+        text-align: center;
+        margin-bottom: 35px;
+    }
+
+    .custom-login-container .login-header h2 {
+        color: #1B3168;
+        font-size: 32px; /* Tăng kích thước tiêu đề */
+        margin-bottom: 12px;
+        font-weight: 700; /* Tăng độ đậm */
+        letter-spacing: 0.5px;
+    }
+
+    .custom-login-container .login-header p {
+        color: #666;
+        font-size: 15px;
+        font-weight: 500;
+    }
+
+    .custom-login-container .form-group {
+        margin-bottom: 25px;
+        position: relative;
+    }
+
+    .custom-login-container .form-control {
+        height: 55px; /* Tăng chiều cao input */
+        padding: 12px 18px;
+        border: 2px solid #ddd; /* Tăng độ dày viền */
+        border-radius: 8px;
+        transition: all 0.3s ease;
+        font-size: 15px;
+        font-weight: 500;
+    }
+
+    .custom-login-container .form-control:focus {
+        border-color: #1B3168;
+        box-shadow: 0 0 0 0.2rem rgba(27, 49, 104, 0.25);
+    }
+
+    .custom-login-container .control-label {
+        font-size: 15px;
+        color: #444;
+        margin-bottom: 10px;
+        display: block;
+        font-weight: 600; /* Tăng độ đậm */
+    }
+
+    .custom-login-container .custom-btn-login {
+        width: 100%;
+        height: 55px; /* Tăng chiều cao button */
+        background: #1B3168;
+        border: none;
+        border-radius: 8px;
+        color: white;
+        font-size: 17px;
+        font-weight: 600; /* Tăng độ đậm */
+        letter-spacing: 0.5px;
+        transition: all 0.3s ease;
+        cursor: pointer;
+        text-transform: uppercase; /* Chữ in hoa */
+    }
+
+    .custom-login-container .custom-btn-login:hover {
+        background: #2B4C8C;
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(27, 49, 104, 0.3);
+    }
+
+    .custom-login-container .text-danger {
+        font-size: 14px;
+        margin-top: 6px;
+        font-weight: 500;
+    }
+
+    .custom-login-container .login-footer {
+        text-align: center;
+        margin-top: 25px;
+    }
+
+    .custom-login-container .login-footer p {
+        font-size: 15px;
+        font-weight: 500;
+        margin-bottom: 8px;
+    }
+
+    .custom-login-container .login-footer a {
+        color: #1B3168;
+        text-decoration: none;
+        font-weight: 600;
+        transition: all 0.3s ease;
+    }
+
+    .custom-login-container .login-footer a:hover {
+        color: #2B4C8C;
+        text-decoration: underline;
+    }
+
+    /* Thêm animation cho form khi load */
+    @@keyframes fadeIn {
+        from {
+            opacity: 0;
+            transform: translateY(20px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    .custom-login-container {
+        animation: fadeIn 0.5s ease-out;
+    }
+
+    /* Auth buttons */
+    .auth-buttons {
+        display: flex;
+        gap: 12px;
+    }
+
+    .auth-button {
+        padding: 8px 16px;
+        border-radius: 4px;
+        font-size: 15px;
+        font-weight: 500;
+        transition: all 0.2s ease;
+        text-decoration: none;
+    }
+
+    .btn-signup {
+        background-color: #2C3E50;
+        color: white !important;
+        border: 1px solid #2C3E50;
+    }
+
+        .btn-signup:hover {
+            opacity: 0.9;
+        }
+
+    .btn-login {
+        background-color: transparent;
+        color: #2C3E50 !important;
+        border: 1px solid #2C3E50;
+    }
+
+        .btn-login:hover {
+            background-color: #f8f9fa;
+        }
+</style>
+
+
+
+<div class="custom-login-container">
+    <div class="login-header">
+        <h2>Đăng nhập</h2>
+        <p>Đăng nhập để trải nghiệm đầy đủ tính năng</p>
+    </div>
+
+    @if (!string.IsNullOrEmpty(ViewBag.Fail))
+    {
+        <div class="alert alert-danger" role="alert">
+            @ViewBag.Fail
+        </div>
+    }
+
+    @using (Html.BeginForm("Dangnhap", "User", FormMethod.Post))
+    {
+        @Html.AntiForgeryToken()
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.userMail, "Email", new { @class = "control-label" })
+            @Html.EditorFor(model => model.userMail, new { htmlAttributes = new { @class = "form-control", placeholder = "Nhập email của bạn" } })
+            @Html.ValidationMessageFor(model => model.userMail, "", new { @class = "text-danger" })
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.password, "Mật khẩu", new { @class = "control-label" })
+            @Html.EditorFor(model => model.password, new { htmlAttributes = new { @class = "form-control", type = "password", placeholder = "Nhập mật khẩu" } })
+            @Html.ValidationMessageFor(model => model.password, "", new { @class = "text-danger" })
+        </div>
+
+        <div class="form-group">
+            <button type="submit" class="custom-btn-login">Đăng nhập</button>
+        </div>
+    }
+
+    <div class="login-footer">
+        <p>Chưa có tài khoản? <a href="@Url.Action("Dangky", "User")">Đăng ký ngay</a></p>
+    </div>
+</div>

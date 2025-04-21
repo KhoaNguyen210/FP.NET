@@ -1,0 +1,379 @@
+﻿@model FashionStore.Models.DonHang
+
+@{
+    ViewBag.Title = "Sửa đơn hàng";
+    Layout = "~/Areas/Admin/Views/Shared/_LayoutAdmin.cshtml";
+}
+
+<div class="container-fluid">
+    <!-- Page Header -->
+    <div class="page-header">
+        <h2><i class="fas fa-edit me-2"></i>&nbsp Sửa đơn hàng</h2>
+    </div>
+
+    <div class="card">
+        <div class="card-body">
+            <!-- Breadcrumb -->
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item">
+                        <a href="/Admin/Home/Index"><i class="fas fa-home me-1"></i>&nbsp Trang chủ</a>
+                    </li>
+                    <li class="breadcrumb-item">
+                        <a href="/Admin/DonHangs"><i class="fas fa-shopping-cart me-1"></i>&nbsp Đơn hàng</a>
+                    </li>
+                    <li class="breadcrumb-item active">
+                        <i class="fas fa-edit me-1"></i>&nbsp Sửa đơn hàng
+                    </li>
+                </ol>
+            </nav>
+
+            @using (Html.BeginForm("Edit", "DonHangs", FormMethod.Post, new { @class = "needs-validation", id = "editOrderForm" }))
+            {
+                @Html.AntiForgeryToken()
+                @Html.HiddenFor(m => m.MaDon)
+
+                <div class="section-divider">
+                    <h5 class="text-primary mb-4">
+                        <i class="fas fa-info-circle me-2"></i>&nbsp Thông tin đơn hàng
+                    </h5>
+
+                    <div class="row">
+                        <!-- Left Column -->
+                        <div class="col-md-6">
+                            <div class="form-group mb-4">
+                                @Html.LabelFor(m => m.NgayDat, "Ngày đặt", new { @class = "form-label required" })
+                                <div class="input-group">
+                                    <span class="input-group-text bg-light">
+                                        <i class="fas fa-calendar"></i>
+                                    </span>
+                                    @Html.TextBoxFor(m => m.NgayDat, "{0:yyyy-MM-dd}", new { @class = "form-control form-control-lg", type = "date" })
+                                </div>
+                                @Html.ValidationMessageFor(m => m.NgayDat, "", new { @class = "text-danger" })
+                            </div>
+
+                            <div class="form-group mb-4">
+                                @Html.LabelFor(m => m.TinhTrang, "Tình trạng", new { @class = "form-label required" })
+                                <div class="input-group">
+                                    <span class="input-group-text bg-light">
+                                        <i class="fas fa-tasks"></i>
+                                    </span>
+                                    @Html.DropDownListFor(m => m.TinhTrang,
+                                        new List<SelectListItem> {
+                                            new SelectListItem { Text = "Đang chờ xác nhận", Value = "0" },
+                                            new SelectListItem { Text = "Đã xác nhận", Value = "1" },
+                                        },
+                                        new { @class = "form-control form-control-lg" })
+                                </div>
+                            </div>
+
+                            <div class="form-group mb-4">
+                                @Html.LabelFor(m => m.ThanhToan, "Phương thức thanh toán", new { @class = "form-label required" })
+                                <div class="input-group">
+                                    <span class="input-group-text bg-light">
+                                        <i class="fas fa-money-bill"></i>
+                                    </span>
+                                    @Html.DropDownListFor(m => m.ThanhToan,
+                                        new List<SelectListItem> {
+                                            new SelectListItem { Text = "Thanh toán khi nhận hàng", Value = "1" },
+                                            new SelectListItem { Text = "Thanh toán online", Value = "2" }
+                                        },
+                                        new { @class = "form-control form-control-lg" })
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Right Column -->
+                        <div class="col-md-6">
+                            <div class="form-group mb-4">
+                                @Html.LabelFor(m => m.DiaChiNhanHang, "Địa chỉ nhận hàng", new { @class = "form-label required" })
+                                <div class="input-group">
+                                    <span class="input-group-text bg-light">
+                                        <i class="fas fa-map-marker-alt"></i>
+                                    </span>
+                                    @Html.TextAreaFor(m => m.DiaChiNhanHang, new { @class = "form-control form-control-lg", rows = "3" })
+                                </div>
+                                @Html.ValidationMessageFor(m => m.DiaChiNhanHang, "", new { @class = "text-danger" })
+                            </div>
+
+                            <div class="form-group mb-4">
+                                @Html.LabelFor(m => m.MaNguoiDung, "Khách hàng", new { @class = "form-label required" })
+                                <div class="input-group">
+                                    <span class="input-group-text bg-light">
+                                        <i class="fas fa-user"></i>
+                                    </span>
+                                    @Html.DropDownList("MaNguoiDung", null, new { @class = "form-control form-control-lg" })
+                                </div>
+                            </div>
+
+                            <div class="form-group mb-4">
+                                @Html.LabelFor(m => m.TongTien, "Tổng tiền", new { @class = "form-label required" })
+                                <div class="input-group">
+                                    <span class="input-group-text bg-light">
+                                        <i class="fas fa-dollar-sign"></i>
+                                    </span>
+                                    @Html.TextBoxFor(m => m.TongTien, new { @class = "form-control form-control-lg", type = "text" })
+                                </div>
+                                @Html.ValidationMessageFor(m => m.TongTien, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Action Buttons -->
+                <div class="form-group mt-4 d-flex gap-3">
+                    <button type="submit" class="btn btn-primary btn-lg">
+                        <i class="fas fa-save me-2"></i>&nbsp Lưu thay đổi
+                    </button>
+                    <a href="@Url.Action("Index")" class="btn btn-light btn-lg">
+                        <i class="fas fa-times me-2"></i>&nbsp Hủy
+                    </a>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+<style>
+    /* Card styling */
+    .card {
+        border-radius: 10px;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+    }
+
+    /* Page header */
+    .page-header {
+        background: linear-gradient(135deg, #4e73df, #224abe);
+        padding: 1.5rem;
+        border-radius: 0.5rem;
+        margin-bottom: 2rem;
+    }
+
+        .page-header h2 {
+            color: white;
+            margin: 0;
+            font-size: 1.75rem;
+        }
+
+    /* Form controls */
+    .form-control {
+        border-radius: 5px;
+        padding: 10px 15px;
+        border: 1px solid #ddd;
+    }
+
+    .input-group-text {
+        background: #f8f9fa;
+        border: 1px solid #ddd;
+    }
+
+    /* Labels */
+    .form-label {
+        font-weight: 600;
+        color: #2c3e50;
+        margin-bottom: 8px;
+    }
+
+    .required:after {
+        content: " *";
+        color: #e74a3b;
+    }
+
+    /* Section divider */
+    .section-divider {
+        padding: 20px;
+        background: white;
+        border-radius: 10px;
+        margin-bottom: 20px;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+    }
+
+    /* Breadcrumb */
+    .breadcrumb {
+        background: #f8f9fa;
+        padding: 15px;
+        border-radius: 5px;
+        margin-bottom: 25px;
+    }
+
+    .breadcrumb-item a {
+        color: #4e73df;
+        text-decoration: none;
+    }
+</style>
+
+@@section Scripts {
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script>
+    $(document).ready(function () {
+        // Format date input - set max date as today
+        const today = new Date().toISOString().split('T')[0];
+        $('#NgayDat').attr('max', today);
+
+        // Format currency for TongTien
+        function formatCurrency(value) {
+            // Remove all non-digits and leading zeros
+            value = value.replace(/[^\d]/g, '').replace(/^0+/, '');
+            if (!value) return '';
+
+            // Format number with thousands separator
+            return new Intl.NumberFormat('vi-VN', {
+                maximumFractionDigits: 0,
+                minimumFractionDigits: 0
+            }).format(value);
+        }
+
+        // Format input on keyup/change
+        $('#TongTien').on('input', function (e) {
+            let cursorPosition = this.selectionStart;
+            let value = $(this).val();
+            let originalLength = value.length;
+
+            // Remove all non-digits
+            value = value.replace(/[^\d]/g, '');
+
+            if (value) {
+                // Format the value
+                value = formatCurrency(value);
+                $(this).val(value);
+
+                // Adjust cursor position
+                let newLength = value.length;
+                let cursorAdjustment = newLength - originalLength;
+                this.setSelectionRange(cursorPosition + cursorAdjustment, cursorPosition + cursorAdjustment);
+            } else {
+                $(this).val('');
+            }
+        });
+
+        // Initialize TongTien with formatted value
+        let initialValue = $('#TongTien').val();
+        if (initialValue) {
+            $('#TongTien').val(formatCurrency(initialValue));
+        }
+
+        // Form validation and submission
+        $('#editOrderForm').on('submit', function (e) {
+            e.preventDefault();
+            let isValid = true;
+
+            // Validation checks
+            const validationFields = {
+                'NgayDat': {
+                    required: true,
+                    validate: function (value) {
+                        return value && new Date(value) <= new Date();
+                    }
+                },
+                'TinhTrang': { required: true },
+                'ThanhToan': { required: true },
+                'MaNguoiDung': { required: true },
+                'DiaChiNhanHang': { required: true },
+                'TongTien': {
+                    required: true,
+                    validate: function (value) {
+                        let cleanValue = value.replace(/[^\d]/g, '');
+                        return cleanValue && !isNaN(cleanValue) && parseInt(cleanValue) >= 0;
+                    }
+                }
+            };
+
+            // Perform validation
+            Object.keys(validationFields).forEach(field => {
+                const $field = $(`#${field}`);
+                const rules = validationFields[field];
+                let fieldValue = $field.val();
+
+                if (rules.required && !fieldValue) {
+                    $field.addClass('is-invalid');
+                    isValid = false;
+                } else if (rules.validate && !rules.validate(fieldValue)) {
+                    $field.addClass('is-invalid');
+                    isValid = false;
+                } else {
+                    $field.removeClass('is-invalid');
+                }
+            });
+
+            if (!isValid) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Lỗi!',
+                    text: 'Vui lòng kiểm tra lại thông tin nhập vào',
+                    confirmButtonText: 'Đóng'
+                });
+                return false;
+            }
+
+            // Clean TongTien value before submission
+            let tongTienValue = $('#TongTien').val().replace(/[^\d]/g, '');
+            $('#TongTien').val(tongTienValue);
+
+            // Confirmation dialog
+            Swal.fire({
+                title: 'Xác nhận cập nhật?',
+                text: 'Bạn có chắc chắn muốn cập nhật đơn hàng này?',
+                icon: 'question',
+                showCancelButton: true,
+                confirmButtonText: 'Xác nhận',
+                cancelButtonText: 'Hủy'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    const submitBtn = $(this).find('button[type="submit"]');
+                    submitBtn.prop('disabled', true)
+                        .html('<i class="fas fa-spinner fa-spin me-2"></i> Đang xử lý...');
+
+                    // Submit form
+                    try {
+                        this.submit();
+                    } catch (error) {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Lỗi!',
+                            text: 'Đã có lỗi xảy ra khi cập nhật đơn hàng',
+                            confirmButtonText: 'Đóng'
+                        });
+                        submitBtn.prop('disabled', false)
+                            .html('<i class="fas fa-save me-2"></i> Lưu thay đổi');
+                    }
+                } else {
+                    // Reformat TongTien if not submitting
+                    $('#TongTien').val(formatCurrency(tongTienValue));
+                }
+            });
+        });
+
+        // Status color indicators
+        $('#TinhTrang').on('change', function () {
+            const status = parseInt($(this).val());
+            $(this).removeClass().addClass('form-control form-control-lg');
+
+            switch (status) {
+                case 0:
+                    $(this).addClass('text-warning');  // Đang xử lý
+                    break;
+                case 1:
+                    $(this).addClass('text-success');  // Đã hoàn thành
+                    break;
+            }
+        }).trigger('change');
+
+        // Reset validation on input
+        $('input, select, textarea').on('input change', function () {
+            $(this).removeClass('is-invalid');
+        });
+
+        // Prevent form submission on enter key
+        $(window).keydown(function (event) {
+            if (event.keyCode == 13) {
+                event.preventDefault();
+                return false;
+            }
+        });
+    });
+</script>
+}
+
+
+
+

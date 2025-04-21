@@ -1,0 +1,168 @@
+﻿@model FashionStore.Models.PhanQuyen
+
+@{
+    ViewBag.Title = "Tạo phân quyền mới";
+    Layout = "~/Areas/Admin/Views/Shared/_LayoutAdmin.cshtml";
+}
+
+<div class="container-fluid">
+    <div class="page-header">
+        <h2><i class="fas fa-user-shield me-2"></i>&nbsp Tạo phân quyền mới</h2>
+    </div>
+
+    <div class="card">
+        <div class="card-body">
+            <!-- Breadcrumb -->
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item">
+                        <a href="/Admin/Home/Index" class="text-decoration-none">
+                            <i class="fas fa-home me-1"></i>&nbsp Trang chủ
+                        </a>
+                    </li>
+                    <li class="breadcrumb-item">
+                        <a href="/Admin/PhanQuyens" class="text-decoration-none">
+                            <i class="fas fa-user-shield me-1"></i>&nbsp Phân quyền
+                        </a>
+                    </li>
+                    <li class="breadcrumb-item active">
+                        <i class="fas fa-plus me-1"></i>&nbsp Tạo mới
+                    </li>
+                </ol>
+            </nav>
+
+            @using (Html.BeginForm("Create", "PhanQuyens", FormMethod.Post, new { @class = "needs-validation", id = "createRoleForm" }))
+            {
+                @Html.AntiForgeryToken()
+
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="section-divider">
+                            <h5 class="text-primary mb-4">
+                                <i class="fas fa-info-circle me-2"></i>&nbsp Thông tin phân quyền
+                            </h5>
+
+                            <div class="form-group mb-4">
+                                @Html.LabelFor(model => model.TenQuyen, "Tên quyền", new { @class = "form-label required" })
+                                <div class="input-group">
+                                    <span class="input-group-text bg-light">
+                                        <i class="fas fa-key"></i>
+                                    </span>
+                                    @Html.TextBoxFor(model => model.TenQuyen, new { @class = "form-control form-control-lg", placeholder = "Nhập tên quyền" })
+                                </div>
+                                <div class="invalid-feedback">Vui lòng nhập tên quyền</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Buttons -->
+                <div class="form-group mt-4 d-flex gap-3">
+                    <button type="submit" class="btn btn-primary btn-lg">
+                        <i class="fas fa-save me-2"></i>&nbsp Tạo phân quyền
+                    </button>
+                    <a href="/Admin/PhanQuyens" class="btn btn-light btn-lg">
+                        <i class="fas fa-times me-2"></i>&nbsp Hủy
+                    </a>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+<style>
+    .page-header {
+        background: linear-gradient(135deg, #4e73df, #224abe);
+        padding: 1.5rem;
+        border-radius: 0.5rem;
+        margin-bottom: 2rem;
+    }
+
+        .page-header h2 {
+            color: white;
+            margin: 0;
+            font-size: 1.75rem;
+        }
+
+    /* Các style khác giữ nguyên như trong code gốc của bạn */
+</style>
+
+@section Scripts {
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script>
+        $(document).ready(function () {
+            // Form validation
+            $('#createRoleForm').on('submit', async function (e) {
+                e.preventDefault();
+                let isValid = true;
+
+                // Validate Tên quyền
+                if ($('#TenQuyen').val().trim() === '') {
+                    $('#TenQuyen').addClass('is-invalid');
+                    isValid = false;
+                } else {
+                    $('#TenQuyen').removeClass('is-invalid');
+                }
+
+                if (!isValid) {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Lỗi!',
+                        text: 'Vui lòng nhập tên quyền',
+                        confirmButtonText: 'Đóng'
+                    });
+                    return false;
+                }
+
+                try {
+                    // Show loading state
+                    await Swal.fire({
+                        title: 'Đang xử lý...',
+                        text: 'Vui lòng chờ trong giây lát',
+                        allowOutsideClick: false,
+                        showConfirmButton: false,
+                        didOpen: () => {
+                            Swal.showLoading();
+                        },
+                        timer: 1000
+                    });
+
+                    // Submit form
+                    const formData = new FormData(this);
+                    const response = await $.ajax({
+                        url: this.action,
+                        type: 'POST',
+                        data: formData,
+                        processData: false,
+                        contentType: false
+                    });
+
+                    // Hiển thị thông báo thành công
+                    await Swal.fire({
+                        icon: 'success',
+                        title: 'Thành công!',
+                        text: 'Thêm phân quyền mới thành công',
+                        timer: 1500,
+                        showConfirmButton: false
+                    });
+
+                    // Chuyển hướng về trang Index
+                    window.location.href = '/Admin/PhanQuyens';
+
+                } catch (error) {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Lỗi!',
+                        text: 'Có lỗi xảy ra khi thêm phân quyền. Vui lòng thử lại!',
+                        confirmButtonText: 'Đóng'
+                    });
+                }
+            });
+
+            // Reset validation on input
+            $('input').on('input', function () {
+                $(this).removeClass('is-invalid');
+            });
+        });
+    </script>
+}

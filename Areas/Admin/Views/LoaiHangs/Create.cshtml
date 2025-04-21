@@ -1,0 +1,240 @@
+﻿@model FashionStore.Models.LoaiHang
+
+@{
+    ViewBag.Title = "Thêm loại hàng mới";
+    Layout = "~/Areas/Admin/Views/Shared/_LayoutAdmin.cshtml";
+}
+
+<div class="container-fluid">
+    <div class="page-header">
+        <h2><i class="fas fa-plus-circle me-2"></i>&nbsp Thêm loại hàng mới</h2>
+    </div>
+
+    <div class="card">
+        <div class="card-body">
+            <!-- Breadcrumb -->
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item">
+                        <a href="/Admin/Home/Index" class="text-decoration-none">
+                            <i class="fas fa-home me-1"></i>&nbsp Trang chủ
+                        </a>
+                    </li>
+                    <li class="breadcrumb-item">
+                        <a href="/Admin/LoaiHangs" class="text-decoration-none">
+                            <i class="fas fa-tags me-1"></i>&nbsp Loại hàng
+                        </a>
+                    </li>
+                    <li class="breadcrumb-item active">
+                        <i class="fas fa-plus me-1"></i>&nbsp Tạo mới
+                    </li>
+                </ol>
+            </nav>
+
+            @using (Html.BeginForm("Create", "LoaiHangs", FormMethod.Post, new { @class = "needs-validation", id = "createCategoryForm" }))
+            {
+                @Html.AntiForgeryToken()
+
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="section-divider">
+                            <h5 class="text-primary mb-4">
+                                <i class="fas fa-info-circle me-2"></i>&nbsp Thông tin loại hàng
+                            </h5>
+
+                            <div class="form-group mb-4">
+                                @Html.LabelFor(model => model.TenLoai, "Tên loại hàng", new { @class = "form-label required" })
+                                <div class="input-group">
+                                    <span class="input-group-text">
+                                        <i class="fas fa-tag"></i>
+                                    </span>
+                                    @Html.TextBoxFor(model => model.TenLoai, new { @class = "form-control form-control-lg", placeholder = "Nhập tên loại hàng" })
+                                </div>
+                                <div class="invalid-feedback">Vui lòng nhập tên loại hàng</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Buttons -->
+                <div class="form-group mt-4 d-flex gap-3">
+                    <button type="submit" class="btn btn-primary btn-lg">
+                        <i class="fas fa-save me-2"></i>&nbsp Tạo loại hàng
+                    </button>
+                    <a href="/Admin/LoaiHangs" class="btn btn-light btn-lg">
+                        <i class="fas fa-times me-2"></i>&nbsp Hủy
+                    </a>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+@section Styles {
+    <style>
+        /* Card styling */
+        .card {
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        }
+
+        /* Page header */
+        .page-header {
+            background: linear-gradient(135deg, #4e73df, #224abe);
+            padding: 1.5rem;
+            border-radius: 0.5rem;
+            margin-bottom: 2rem;
+        }
+
+            .page-header h2 {
+                color: white;
+                margin: 0;
+                font-size: 1.75rem;
+            }
+
+        /* Form controls */
+        .form-control, .form-select {
+            border-radius: 5px;
+            padding: 10px 15px;
+            border: 1px solid #ddd;
+        }
+
+        .input-group-text {
+            background: #f8f9fa;
+            border: 1px solid #ddd;
+        }
+
+        /* Labels */
+        .form-label {
+            font-weight: 600;
+            color: #2c3e50;
+            margin-bottom: 8px;
+        }
+
+        .required:after {
+            content: " *";
+            color: #e74a3b;
+        }
+
+        /* Section divider */
+        .section-divider {
+            padding: 20px;
+            background: white;
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+
+        /* Breadcrumb */
+        .breadcrumb {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 25px;
+        }
+
+        .breadcrumb-item a {
+            color: #4e73df;
+            text-decoration: none;
+        }
+
+        /* Buttons */
+        .btn {
+            padding: 12px 25px;
+            border-radius: 5px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary {
+            background: #4e73df;
+            border: none;
+        }
+
+            .btn-primary:hover {
+                background: #224abe;
+                transform: translateY(-2px);
+            }
+    </style>
+}
+
+@section Scripts {
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script>
+        $(document).ready(function () {
+            // Form validation
+            $('#createCategoryForm').on('submit', async function (e) {
+                e.preventDefault();
+                let isValid = true;
+                let errorMessages = [];
+
+                // Validate Tên loại hàng
+                if ($('#TenLoai').val().trim() === '') {
+                    $('#TenLoai').addClass('is-invalid');
+                    errorMessages.push('Tên loại hàng không được để trống');
+                    isValid = false;
+                }
+
+                if (!isValid) {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Lỗi!',
+                        html: errorMessages.join('<br>'),
+                        confirmButtonText: 'Đóng'
+                    });
+                    return false;
+                }
+
+                try {
+                    // Show loading state
+                    await Swal.fire({
+                        title: 'Đang xử lý...',
+                        text: 'Vui lòng chờ trong giây lát',
+                        allowOutsideClick: false,
+                        showConfirmButton: false,
+                        didOpen: () => {
+                            Swal.showLoading();
+                        },
+                        timer: 1000
+                    });
+
+                    // Submit form
+                    const formData = new FormData(this);
+
+                    // Gửi request AJAX
+                    const response = await $.ajax({
+                        url: this.action,
+                        type: 'POST',
+                        data: formData,
+                        processData: false,
+                        contentType: false
+                    });
+
+                    // Hiển thị thông báo thành công
+                    await Swal.fire({
+                        icon: 'success',
+                        title: 'Thành công!',
+                        text: 'Thêm loại hàng mới thành công',
+                        timer: 1500,
+                        showConfirmButton: false
+                    });
+
+                    // Chuyển hướng về trang Index
+                    window.location.href = '/Admin/LoaiHangs';
+
+                } catch (error) {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Lỗi!',
+                        text: 'Có lỗi xảy ra khi thêm loại hàng. Vui lòng thử lại!',
+                        confirmButtonText: 'Đóng'
+                    });
+                }
+            });
+
+            // Reset validation khi nhập liệu
+            $('input, textarea').on('input', function () {
+                $(this).removeClass('is-invalid');
+            });
+        });
+    </script>
+}

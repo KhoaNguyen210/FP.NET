@@ -1,0 +1,166 @@
+﻿@model IEnumerable<FashionStore.Models.TaiKhoan>
+
+@{
+    ViewBag.Title = "Quản lý tài khoản";
+    Layout = "~/Areas/Admin/Views/Shared/_LayoutAdmin.cshtml";
+    var grid = new WebGrid(Model, canPage: true, defaultSort: "HoTen", rowsPerPage: 5);
+}
+
+<div class="container-fluid">
+    <div class="page-header">
+        <h2><i class="fas fa-users me-2"></i>&nbsp Quản lý tài khoản</h2>
+    </div>
+
+    <div class="card">
+        <div class="card-body">
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item">
+                        <a href="/Admin/Home/Index" class="text-decoration-none">
+                            <i class="fas fa-home me-1"></i>&nbsp Trang chủ
+                        </a>
+                    </li>
+                    <li class="breadcrumb-item active">
+                        <i class="fas fa-users me-1"></i>&nbsp Tài khoản
+                    </li>
+                </ol>
+            </nav>
+
+            <div class="mb-3">
+                <a href="@Url.Action("Create")" class="btn btn-primary">
+                    <i class="fas fa-user-plus me-2"></i>&nbsp Tạo tài khoản mới
+                </a>
+            </div>
+
+            <div class="table-responsive">
+                @grid.GetHtml(
+                    tableStyle: "table table-hover table-bordered custom-table",
+                    headerStyle: "bg-primary text-white fw-bold",
+                    alternatingRowStyle: "alternating-row",
+                    columns: grid.Columns(
+                        grid.Column("PhanQuyen.TenQuyen", "Quyền",
+                            format: @<text>
+                                    <span class="badge bg-@(item.PhanQuyen.TenQuyen == "Adminstrator" ? "danger" : "info")">
+                                        @item.PhanQuyen.TenQuyen
+                                    </span>
+                            </text>,
+                     style: "align-middle text-center"),
+                 grid.Column("HoTen", "Họ tên", style: "align-middle"),
+                 grid.Column("Email", "Email", style: "align-middle"),
+                 grid.Column("DienThoai", "Điện thoại", style: "align-middle"),
+                 grid.Column("DiaChi", "Địa chỉ", style: "align-middle"),
+                 grid.Column(header: "Trạng thái",
+                     format: @<text>
+                            <span class="badge bg-success">
+                                <i class="fas fa-check-circle me-1"></i>&nbsp Hoạt động
+                            </span>
+                    </text>,
+             style: "align-middle text-center"),
+         grid.Column(header: "Thao tác",
+             format: @<text>
+                    <div class="btn-group" role="group">
+                        <a href="@Url.Action("Edit", new { id = item.MaNguoiDung })" class="btn btn-warning btn-sm" title="Sửa">
+                            <i class="fas fa-edit"></i>&nbsp Sửa
+                        </a>
+                        <a href="@Url.Action("Details", new { id = item.MaNguoiDung })" class="btn btn-info btn-sm" title="Chi tiết">
+                            <i class="fas fa-info-circle"></i>&nbsp Chi tiết
+                        </a>
+                        <a href="@Url.Action("Delete", new { id = item.MaNguoiDung })" class="btn btn-danger btn-sm" title="Xóa">
+                            <i class="fas fa-trash"></i>&nbsp Xóa
+                        </a>
+                    </div>
+            </text>,
+     style: "text-center align-middle")
+)
+)
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    /* Giữ nguyên các style từ trang Loại hàng */
+    .page-header {
+        background: linear-gradient(135deg, #4e73df, #224abe);
+        padding: 1.5rem;
+        border-radius: 0.5rem;
+        margin-bottom: 2rem;
+    }
+
+    .page-header h2 {
+        color: white;
+        margin: 0;
+        font-size: 1.75rem;
+    }
+
+    .breadcrumb {
+        background: #f8f9fa;
+        padding: 15px;
+        border-radius: 5px;
+        margin-bottom: 25px;
+    }
+
+    .breadcrumb-item a {
+        color: #4e73df;
+    }
+
+    .custom-table th {
+        color: white !important;
+    }
+
+    .custom-table th a {
+        color: white !important;
+    }
+
+    .alternating-row {
+        background-color: rgba(0,0,0,.05);
+    }
+
+    /* Style mới cho trang Tài khoản */
+    .badge {
+        font-size: 0.875rem;
+        padding: 0.5em 0.75em;
+        transition: all 0.3s ease;
+    }
+
+    .badge:hover {
+        transform: scale(1.1);
+    }
+
+    .btn-group .btn {
+        margin: 0 2px;
+    }
+
+    .table td {
+        vertical-align: middle;
+    }
+
+    /* Animation cho status badge */
+    .badge.bg-success {
+        animation: pulse 2s infinite;
+    }
+
+    @@keyframes pulse {
+        0% {
+            opacity: 1;
+        }
+        50% {
+            opacity: 0.7;
+        }
+        100% {
+            opacity: 1;
+        }
+    }
+
+    /* Responsive adjustments */
+    @@media (max-width: 768px) {
+        .btn-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .btn-group .btn {
+            margin: 2px 0;
+        }
+    }
+</style>

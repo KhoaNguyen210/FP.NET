@@ -1,0 +1,163 @@
+﻿@model FashionStore.Models.TaiKhoan
+
+@{
+    ViewBag.Title = "Đăng ký";
+    Layout = "~/Views/Shared/_LayoutClient2.cshtml";
+    var useReg = Session["useReg"] as FashionStore.Models.TaiKhoan;
+}
+
+<style>
+    @@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap');
+
+    .custom-register-container {
+        max-width: 600px;
+        margin: 50px auto;
+        padding: 40px;
+        background: white;
+        border-radius: 12px;
+        box-shadow: 0 0 25px rgba(0,0,0,0.1);
+        font-family: 'Poppins', sans-serif;
+        animation: fadeIn 0.5s ease-out;
+    }
+
+    .custom-register-container .register-header {
+        text-align: center;
+        margin-bottom: 35px;
+    }
+
+    .custom-register-container .register-header h2 {
+        color: #1B3168;
+        font-size: 32px;
+        margin-bottom: 12px;
+        font-weight: 700;
+        letter-spacing: 0.5px;
+    }
+
+    .custom-register-container .form-group {
+        margin-bottom: 25px;
+        position: relative;
+    }
+
+    .custom-register-container .control-label {
+        font-size: 15px;
+        color: #444;
+        margin-bottom: 10px;
+        display: block;
+        font-weight: 600;
+    }
+
+    .custom-register-container .form-control {
+        height: 55px;
+        padding: 12px 18px;
+        border: 2px solid #ddd;
+        border-radius: 8px;
+        transition: all 0.3s ease;
+        font-size: 15px;
+        font-weight: 500;
+        width: 100%;
+    }
+
+    .custom-register-container .form-control:focus {
+        border-color: #1B3168;
+        box-shadow: 0 0 0 0.2rem rgba(27, 49, 104, 0.25);
+    }
+
+    .custom-register-container .btn-register {
+        width: 100%;
+        height: 55px;
+        background: #1B3168;
+        border: none;
+        border-radius: 8px;
+        color: white;
+        font-size: 17px;
+        font-weight: 600;
+        letter-spacing: 0.5px;
+        transition: all 0.3s ease;
+        cursor: pointer;
+        text-transform: uppercase;
+    }
+
+    .custom-register-container .btn-register:hover {
+        background: #2B4C8C;
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(27, 49, 104, 0.3);
+    }
+
+    .custom-register-container .text-danger {
+        font-size: 14px;
+        margin-top: 6px;
+        font-weight: 500;
+        color: #dc3545;
+    }
+
+    @@keyframes fadeIn {
+        from {
+            opacity: 0;
+            transform: translateY(20px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+</style>
+
+<div class="custom-register-container">
+    <div class="register-header">
+        <h2>Đăng ký tài khoản</h2>
+        @if (ViewBag.RegOk != null)
+        {
+            <p class="alert alert-success">@ViewBag.RegOk</p>
+        }
+    </div>
+
+    @{
+        if (ViewBag.isReg == true)
+        {
+            <a href="/User/Dangnhap" class="btn btn-register">Đăng nhập</a>
+        }
+    }
+
+    @using (Html.BeginForm("Dangky", "User", FormMethod.Post))
+    {
+        @Html.AntiForgeryToken()
+
+        <div class="form-horizontal">
+            @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.HoTen, "Họ tên", new { @class = "control-label" })
+                @Html.EditorFor(model => model.HoTen, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.HoTen, "", new { @class = "text-danger" })
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.Email, "Email", new { @class = "control-label" })
+                @Html.EditorFor(model => model.Email, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.Email, "", new { @class = "text-danger" })
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.DienThoai, "Điện thoại", new { @class = "control-label" })
+                @Html.EditorFor(model => model.DienThoai, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.DienThoai, "", new { @class = "text-danger" })
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.MatKhau, "Mật khẩu", new { @class = "control-label" })
+                @Html.EditorFor(model => model.MatKhau, new { htmlAttributes = new { type = "password", @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.MatKhau, "", new { @class = "text-danger" })
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.DiaChi, "Địa chỉ", new { @class = "control-label" })
+                @Html.EditorFor(model => model.DiaChi, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.DiaChi, "", new { @class = "text-danger" })
+            </div>
+
+            <div class="form-group">
+                <input type="submit" value="Đăng ký" class="btn-register" />
+            </div>
+        </div>
+    }
+</div>

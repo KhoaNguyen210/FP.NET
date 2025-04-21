@@ -1,0 +1,162 @@
+﻿@model IEnumerable<FashionStore.Models.DonHang>
+
+@{
+    ViewBag.Title = "Danh sách đơn hàng";
+    Layout = "~/Views/Shared/_LayoutClient2.cshtml";
+}
+
+<style>
+    .order-container {
+        max-width: 1200px;
+        margin: 40px auto;
+        padding: 20px;
+    }
+
+    .order-title {
+        color: #CC9966;
+        text-align: center;
+        font-size: 32px;
+        margin-bottom: 30px;
+        font-weight: 600;
+    }
+
+    .order-table {
+        width: 100%;
+        background: white;
+        border-radius: 8px;
+        overflow: hidden;
+        box-shadow: 0 0 20px rgba(0,0,0,0.1);
+    }
+
+        .order-table th {
+            background: #f8f9fa;
+            padding: 15px;
+            font-weight: 600;
+            color: #2c3e50;
+            text-align: left;
+        }
+
+        .order-table td {
+            padding: 15px;
+            border-bottom: 1px solid #eee;
+            vertical-align: middle;
+        }
+
+    .status-pending {
+        color: #e74c3c;
+        font-weight: 500;
+    }
+
+    .status-confirmed {
+        color: #27ae60;
+        font-weight: 500;
+    }
+
+    .status-waiting {
+        color: #f39c12;
+        font-weight: 500;
+    }
+
+    .payment-cash {
+        color: #e74c3c;
+        font-weight: 500;
+    }
+
+    .payment-transfer {
+        color: #8e44ad;
+        font-weight: 500;
+    }
+
+    .btn-detail {
+        background: #2c3e50;
+        color: white;
+        padding: 8px 20px;
+        border-radius: 5px;
+        text-decoration: none;
+        transition: all 0.3s ease;
+        border: none;
+        cursor: pointer;
+    }
+
+        .btn-detail:hover {
+            background: #34495e;
+            transform: translateY(-2px);
+        }
+
+    .order-row:hover {
+        background-color: #f8f9fa;
+    }
+
+    .empty-message {
+        text-align: center;
+        padding: 30px;
+        color: #7f8c8d;
+        font-size: 18px;
+    }
+</style>
+
+<div class="order-container">
+    <h2 class="order-title">Danh sách đơn hàng</h2>
+
+    @if (Model.Any())
+    {
+        <table class="order-table">
+            <thead>
+                <tr>
+                    <th>Họ tên</th>
+                    <th>Ngày đặt</th>
+                    <th>Tình trạng đơn hàng</th>
+                    <th>Thanh toán</th>
+                    <th>Địa chỉ nhận hàng</th>
+                    <th>Thao tác</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr class="order-row">
+                        <td>@Html.DisplayFor(modelItem => item.TaiKhoan.HoTen)</td>
+                        <td>@item.NgayDat.ToString()</td>
+                        <td>
+                            @switch (item.TinhTrang)
+                            {
+                                case 0:
+                                    <span class="status-pending">Đang chờ xác nhận</span>
+                                    break;
+                                case 1:
+                                    <span class="status-confirmed">Đã xác nhận</span>
+                                    break;
+                                default:
+                                    <span class="status-waiting">Đang chờ xác nhận</span>
+                                    break;
+                            }
+                        </td>
+                        <td>
+                            @switch (item.ThanhToan)
+                            {
+                                case 1:
+                                    <span class="payment-cash">Thanh toán tiền mặt</span>
+                                    break;
+                                case 2:
+                                    <span class="payment-transfer">Thanh toán chuyển khoản</span>
+                                    break;
+                            }
+                        </td>
+                        <td>@Html.DisplayFor(modelItem => item.DiaChiNhanHang)</td>
+                        <td>
+                            <a href="@Url.Action("Details", new { id = item.MaDon })" class="btn-detail">
+                                Chi tiết
+                            </a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+    else
+    {
+        <div class="empty-message">
+            Chưa có đơn hàng nào
+        </div>
+    }
+</div>

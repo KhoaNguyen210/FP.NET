@@ -1,0 +1,261 @@
+﻿@model FashionStore.Models.DonHang
+
+@{
+    ViewBag.Title = "ThanhToanDonHang";
+    Layout = "~/Views/Shared/_LayoutClient2.cshtml";
+}
+
+<style>
+    body {
+        font-size: 16px;
+    }
+
+    .checkout-container {
+        max-width: 900px;
+        margin: 40px auto;
+        padding: 30px;
+        background: white;
+        border-radius: 15px;
+        box-shadow: 0 0 20px rgba(0,0,0,0.1);
+    }
+
+    .checkout-header {
+        text-align: center;
+        margin-bottom: 35px;
+    }
+
+    .checkout-title {
+        color: #003366;
+        font-size: 32px;
+        font-weight: 600;
+        margin-bottom: 20px;
+    }
+
+    .form-group {
+        margin-bottom: 28px;
+        display: flex;
+        align-items: start;
+    }
+
+    .form-label {
+        width: 220px;
+        font-weight: 600;
+        color: #2c3e50;
+        padding-top: 8px;
+        font-size: 18px;
+    }
+
+    .form-input {
+        flex: 1;
+    }
+
+    .form-control {
+        width: 100%;
+        padding: 12px;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+        font-size: 16px;
+    }
+
+        .form-control:disabled {
+            background-color: #f8f9fa;
+        }
+
+        .form-control.error {
+            border-color: #dc3545;
+            box-shadow: 0 0 0 0.2rem rgba(220,53,69,.25);
+        }
+
+    .error-message {
+        color: #dc3545;
+        font-size: 14px;
+        margin-top: 5px;
+        display: none;
+    }
+
+    .total-amount {
+        font-size: 28px;
+        color: #e74c3c;
+        font-weight: 600;
+    }
+
+    .payment-notice {
+        background-color: #f8f9fa;
+        padding: 20px;
+        border-radius: 5px;
+        margin-top: 15px;
+    }
+
+        .payment-notice h4 {
+            font-size: 20px;
+            margin-bottom: 15px;
+            color: #2c3e50;
+        }
+
+    .payment-notice-item {
+        color: #444;
+        margin-bottom: 12px;
+        line-height: 1.8;
+        font-size: 16px;
+    }
+
+    .btn-order {
+        background-color: #2c3e50;
+        color: white;
+        padding: 15px 35px;
+        border: none;
+        border-radius: 5px;
+        font-size: 18px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+    }
+
+        .btn-order:hover {
+            background-color: #2c3e50;
+            transform: translateY(-2px);
+        }
+
+    .divider {
+        border-top: 1px solid #eee;
+        margin: 25px 0;
+    }
+
+    .text-danger {
+        font-size: 14px;
+        margin-top: 5px;
+    }
+
+    select.form-control option {
+        font-size: 16px;
+        padding: 10px;
+    }
+
+    .fa {
+        font-size: 20px;
+        margin-right: 8px;
+    }
+
+    .payment-notice-item br {
+        margin-bottom: 8px;
+        display: block;
+    }
+</style>
+
+<div class="checkout-container">
+    <div class="checkout-header">
+        <h2 class="checkout-title">
+            <i class="fa fa-credit-card"></i> Thanh toán đơn hàng
+        </h2>
+    </div>
+
+    @using (Html.BeginForm("DatHang", "Giohang", FormMethod.Post, new { @id = "checkoutForm" }))
+    {
+        @Html.AntiForgeryToken()
+        @Html.HiddenFor(model => model.MaDon)
+
+        <div class="form-group">
+            <div class="form-label">Tên người đặt hàng</div>
+            <div class="form-input">
+                @Html.DropDownList("MaNguoiDung", null, new { @class = "form-control", @disabled = "disabled" })
+                @Html.ValidationMessageFor(model => model.MaNguoiDung, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="form-label">Ngày đặt</div>
+            <div class="form-input">
+                @Html.EditorFor(model => model.NgayDat, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly" } })
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="form-label">Tổng tiền thanh toán</div>
+            <div class="form-input">
+                <div class="total-amount">@String.Format("{0:0,0}", @ViewBag.tongtien) VNĐ</div>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="form-label">Địa chỉ nhận hàng</div>
+            <div class="form-input">
+                @Html.EditorFor(model => model.DiaChiNhanHang, new { htmlAttributes = new { @class = "form-control", @id = "DiaChiNhanHang", placeholder = "Nhập địa chỉ nhận hàng" } })
+                <div class="error-message" id="diaChiError">Vui lòng nhập địa chỉ nhận hàng</div>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="form-label">Phương thức thanh toán</div>
+            <div class="form-input">
+                @Html.DropDownList("MaTT", null, new { @class = "form-control" })
+            </div>
+        </div>
+
+        <div class="divider"></div>
+
+        <div class="payment-notice">
+            <h4><i class="fa fa-info-circle"></i> Lưu ý thanh toán:</h4>
+            <div class="payment-notice-item">
+                <i class="fa fa-check"></i> Đối với thanh toán bằng tiền mặt: Kiểm tra sản phẩm trước khi thanh toán cho nhân viên giao hàng.
+            </div>
+            <div class="payment-notice-item">
+                <i class="fa fa-bank"></i> Đối với thanh toán chuyển khoản:
+                <br />
+                - Số tài khoản: 0773827162
+                <br />
+                - Chủ tài khoản: KhoaBao.CO
+                <br />
+                - Ngân hàng: MB BANK
+                <br />
+                - Nội dung: [@Model.MaNguoiDung] Thanh toán mua hàng Trendy Mall Fashion Store.
+            </div>
+        </div>
+
+        <div class="form-group" style="justify-content: center; margin-top: 30px;">
+            <button type="submit" class="btn-order" id="btnDatHang">
+                <i class="fa fa-check"></i> Xác nhận đặt hàng
+            </button>
+        </div>
+    }
+</div>
+
+@section Scripts {
+    <script>
+        document.getElementById('checkoutForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+
+            const diaChiInput = document.getElementById('DiaChiNhanHang');
+            const diaChiError = document.getElementById('diaChiError');
+            const diaChi = diaChiInput.value.trim();
+
+            diaChiInput.classList.remove('error');
+            diaChiError.style.display = 'none';
+
+            const minLength = 10;
+            if (!diaChi) {
+                diaChiInput.classList.add('error');
+                diaChiError.textContent = 'Vui lòng nhập địa chỉ nhận hàng';
+                diaChiError.style.display = 'block';
+                diaChiInput.focus();
+                return false;
+            }
+
+            if (diaChi.length < minLength) {
+                diaChiInput.classList.add('error');
+                diaChiError.textContent = `Địa chỉ phải có ít nhất ${minLength} ký tự`;
+                diaChiError.style.display = 'block';
+                diaChiInput.focus();
+                return false;
+            }
+
+            this.submit();
+        });
+
+        document.getElementById('DiaChiNhanHang').addEventListener('input', function() {
+            if (this.value.trim()) {
+                this.classList.remove('error');
+                document.getElementById('diaChiError').style.display = 'none';
+            }
+        });
+    </script>
+}

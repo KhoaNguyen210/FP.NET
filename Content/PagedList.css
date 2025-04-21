@@ -1,0 +1,102 @@
+.pagination {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 5px;
+    padding: 20px 0;
+}
+
+    .pagination > li {
+        display: inline-flex;
+    }
+
+        .pagination > li > a,
+        .pagination > li > span {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 40px;
+            height: 40px;
+            padding: 0 15px;
+            margin: 0 2px;
+            font-size: 14px;
+            font-weight: 500;
+            color: #666;
+            background-color: #fff;
+            border: 2px solid #eee;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+        }
+
+            .pagination > li > a:hover,
+            .pagination > li > span:hover {
+                color: #fff;
+                background-color: #4CAF50;
+                border-color: #4CAF50;
+                box-shadow: 0 2px 8px rgba(76, 175, 80, 0.3);
+                transform: translateY(-2px);
+            }
+
+    .pagination > .active > a,
+    .pagination > .active > span,
+    .pagination > .active > a:hover,
+    .pagination > .active > span:hover {
+        color: #fff;
+        background-color: #4CAF50;
+        border-color: #4CAF50;
+        box-shadow: 0 2px 8px rgba(76, 175, 80, 0.3);
+    }
+
+    /* Previous/Next buttons */
+    .pagination > li:first-child > a,
+    .pagination > li:last-child > a {
+        padding: 0 20px;
+        font-weight: 600;
+    }
+
+    /* Disabled state */
+    .pagination > .disabled > span,
+    .pagination > .disabled > a {
+        color: #ccc;
+        background-color: #f8f8f8;
+        border-color: #eee;
+        cursor: not-allowed;
+        pointer-events: none;
+    }
+
+/* Responsive adjustments */
+@media (max-width: 576px) {
+    .pagination > li > a,
+    .pagination > li > span {
+        min-width: 35px;
+        height: 35px;
+        padding: 0 10px;
+        font-size: 13px;
+    }
+
+    .pagination > li:first-child > a,
+    .pagination > li:last-child > a {
+        padding: 0 15px;
+    }
+}
+
+/* Optional: Add animation */
+.pagination > li > a {
+    position: relative;
+    overflow: hidden;
+}
+
+    .pagination > li > a::after {
+        content: '';
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        background: rgba(255, 255, 255, 0.2);
+        top: 0;
+        left: -100%;
+        transition: 0.3s ease-out;
+    }
+
+    .pagination > li > a:hover::after {
+        left: 100%;
+    }

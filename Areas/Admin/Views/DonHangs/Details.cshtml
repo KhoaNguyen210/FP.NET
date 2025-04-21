@@ -1,0 +1,270 @@
+﻿@model FashionStore.Models.DonHang
+
+@{
+    ViewBag.Title = "Chi tiết đơn hàng";
+    Layout = "~/Areas/Admin/Views/Shared/_LayoutAdmin.cshtml";
+}
+
+<style>
+    /* Giữ nguyên phần CSS như cũ */
+</style>
+
+<div class="details-header">
+    <h2><i class="fas fa-file-invoice mr-2"></i> Chi tiết đơn hàng #@Model.MaDon</h2>
+</div>
+
+<div class="order-details">
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item">
+                <a href="/Admin/Home/Index">
+                    <i class="fas fa-home"></i> Trang chủ
+                </a>
+            </li>
+            <li class="breadcrumb-item">
+                <a href="/Admin/DonHangs">
+                    <i class="fas fa-shopping-cart"></i> Đơn hàng
+                </a>
+            </li>
+            <li class="breadcrumb-item active">Chi tiết đơn hàng</li>
+        </ol>
+    </nav>
+
+    <div class="order-info">
+        <div class="info-section">
+            <div class="section-title">
+                <i class="fas fa-info-circle"></i>
+                Thông tin đơn hàng
+            </div>
+            <div class="info-group">
+                <div class="info-label">Mã đơn hàng</div>
+                <div class="info-value">#@Model.MaDon</div>
+            </div>
+            <div class="info-group">
+                <div class="info-label">Ngày đặt</div>
+                <div class="info-value">@(Model.NgayDat?.ToString("dd/MM/yyyy HH:mm"))</div>
+            </div>
+            <div class="info-group">
+                <div class="info-label">Tình trạng</div>
+                <div class="info-value">
+                    <span class="status-badge @(Model.TinhTrang == 0 ? "status-pending" : "status-completed")">
+                        @(Model.TinhTrang == 0 ? "Đang xử lý" : "Đã hoàn thành")
+                    </span>
+
+                </div>
+            </div>
+            <div class="info-group">
+                <div class="info-label">Phương thức thanh toán</div>
+                <div class="info-value">
+                    @(Model.ThanhToan == 1 ? "Thanh toán khi nhận hàng" :
+      Model.ThanhToan == 2 ? "Thanh toán chuyển khoản" : "")
+                </div>
+
+
+            </div>
+        </div>
+
+        <div class="info-section">
+            <div class="section-title">
+                <i class="fas fa-user"></i>
+                Thông tin khách hàng
+            </div>
+            <div class="info-group">
+                <div class="info-label">Mã người dùng</div>
+                <div class="info-value">@Model.MaNguoiDung</div>
+            </div>
+            <div class="info-group">
+                <div class="info-label">Tên người dùng</div>
+                <div class="info-value">@(Model.TaiKhoan?.HoTen ?? "Không có thông tin")</div>
+            </div>
+            <div class="info-group">
+                <div class="info-label">Địa chỉ nhận hàng</div>
+                <div class="info-value">@Model.DiaChiNhanHang</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="order-items">
+        <div class="section-title">
+            <i class="fas fa-shopping-basket"></i>
+            Chi tiết sản phẩm
+        </div>
+        <table class="items-table">
+            <thead>
+                <tr>
+                    <th>Mã sản phẩm</th>
+                    <th>Tên sản phẩm</th>
+                    <th>Đơn giá</th>
+                    <th>Số lượng</th>
+                    <th>Thành tiền</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model.ChiTietDonHang)
+                {
+                    <tr>
+                        <td>@item.MaSP</td>
+                        <td>@item.SanPham.TenSP</td>
+                        <td>@String.Format("{0:N0}", item.DonGia) VNĐ</td>
+                        <td>@item.SoLuong</td>
+                        <td>@String.Format("{0:N0}", item.ThanhTien) VNĐ</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+
+        <div class="total-section">
+            <div class="total-amount">
+                Tổng tiền: @String.Format("{0:N0}", Model.TongTien) VNĐ
+            </div>
+        </div>
+    </div>
+
+    <a href="@Url.Action("Index")" class="btn-back">
+        <i class="fas fa-arrow-left"></i> Trở về danh sách
+    </a>
+</div>
+<style>
+    .order-details {
+        background: white;
+        border-radius: 10px;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        padding: 30px;
+    }
+
+    .details-header {
+        background: linear-gradient(135deg, #4e73df, #224abe);
+        color: white;
+        padding: 20px;
+        border-radius: 10px;
+        margin-bottom: 25px;
+    }
+
+    .breadcrumb {
+        background: #f8f9fa;
+        padding: 15px;
+        border-radius: 5px;
+        margin-bottom: 25px;
+    }
+
+    .breadcrumb-item a {
+        color: #4e73df;
+        text-decoration: none;
+    }
+
+    .order-info {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 30px;
+        margin-bottom: 30px;
+    }
+
+    .info-section {
+        background: #f8f9fc;
+        padding: 20px;
+        border-radius: 10px;
+        border-left: 4px solid #4e73df;
+    }
+
+    .section-title {
+        color: #4e73df;
+        font-size: 1.2rem;
+        font-weight: 600;
+        margin-bottom: 15px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .info-group {
+        margin-bottom: 15px;
+        padding: 10px;
+        background: white;
+        border-radius: 8px;
+    }
+
+    .info-label {
+        font-weight: 600;
+        color: #4e73df;
+        margin-bottom: 5px;
+        font-size: 0.9rem;
+    }
+
+    .info-value {
+        color: #2c3e50;
+        font-size: 1.1rem;
+    }
+
+    .order-items {
+        margin-top: 30px;
+    }
+
+    .items-table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 15px;
+    }
+
+        .items-table th {
+            background: #4e73df;
+            color: white;
+            padding: 12px;
+            text-align: left;
+        }
+
+        .items-table td {
+            padding: 12px;
+            border-bottom: 1px solid #e3e6f0;
+        }
+
+    .total-section {
+        margin-top: 20px;
+        text-align: right;
+        padding: 15px;
+        background: #f8f9fc;
+        border-radius: 8px;
+    }
+
+    .total-amount {
+        font-size: 1.3rem;
+        font-weight: 600;
+        color: #4e73df;
+    }
+
+    .status-badge {
+        padding: 5px 10px;
+        border-radius: 15px;
+        font-size: 0.9rem;
+        font-weight: 500;
+    }
+
+    .status-pending {
+        background: #f6c23e;
+        color: white;
+    }
+
+    .status-completed {
+        background: #1cc88a;
+        color: white;
+    }
+
+    .status-cancelled {
+        background: #e74a3b;
+        color: white;
+    }
+
+    .btn-back {
+        color: #4e73df;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        margin-top: 20px;
+        transition: all 0.3s ease;
+        font-weight: 500;
+    }
+
+        .btn-back:hover {
+            color: #224abe;
+        }
+</style>

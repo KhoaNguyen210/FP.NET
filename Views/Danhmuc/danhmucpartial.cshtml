@@ -1,0 +1,10 @@
+﻿@using FashionStore.Models;
+@model List<LoaiHang>
+
+
+        @foreach (var item in Model)
+        {
+            <li>
+                <a href="@Url.Action("xemchitietdanhmuc","Sanpham", new {@MaLoai=item.MaLoai })" class="dropdown-item"> @item.TenLoai </a>
+            </li>                
+        }

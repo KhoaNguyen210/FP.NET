@@ -1,0 +1,160 @@
+﻿@model IEnumerable<FashionStore.Models.DonHang>
+
+@{
+    ViewBag.Title = "Quản lý đơn hàng";
+    Layout = "~/Areas/Admin/Views/Shared/_LayoutAdmin.cshtml";
+    var grid = new WebGrid(Model, canPage: true, defaultSort: "~MaDon", rowsPerPage: 5);
+}
+
+<div class="container-fluid">
+    <div class="page-header">
+        <h2><i class="fas fa-shopping-cart me-2"></i>&nbsp Quản lý đơn hàng</h2>
+    </div>
+
+    <div class="card">
+        <div class="card-body">
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item">
+                        <a href="/Admin/Home/Index" class="text-decoration-none">
+                            <i class="fas fa-home me-1"></i>&nbsp Trang chủ
+                        </a>
+                    </li>
+                    <li class="breadcrumb-item active">
+                        <i class="fas fa-shopping-cart me-1"></i>&nbsp Đơn hàng
+                    </li>
+                </ol>
+            </nav>
+
+            <div class="table-responsive">
+                @grid.GetHtml(
+                    tableStyle: "table table-hover table-bordered custom-table",
+                    headerStyle: "bg-primary text-white fw-bold",
+                    alternatingRowStyle: "alternating-row",
+                    columns: grid.Columns(
+                        grid.Column("MaDon", "Mã đơn", style: "align-middle"),
+                        grid.Column("TaiKhoan.HoTen", "Khách hàng", style: "align-middle"),
+                        grid.Column("NgayDat", "Ngày đặt",
+                            format: @<text>@item.NgayDat.ToString("dd/MM/yyyy HH:mm")</text>,
+style: "align-middle"),
+grid.Column("TinhTrang", "Tình trạng",
+format: @<text>
+                            @{
+                                if (item.TinhTrang == 0)
+                                {
+                                    <span class="badge bg-warning">Đang chờ xác nhận</span>
+                                }
+                                else if (item.TinhTrang == 1)
+                                {
+                                    <span class="badge bg-success">Đã xác nhận</span>
+                                }
+                                else
+                                {
+            <span class="badge bg-warning">Đang chờ xác nhận</span>
+                                }
+                            }
+</text>,
+style: "align-middle text-center"),
+grid.Column("ThanhToan", "Thanh toán",
+format: @<text>
+    @{
+        if (item.ThanhToan == 1)
+        {
+            <span class="badge bg-info">Tiền mặt</span>
+        }
+        else if(item.ThanhToan == 2)
+        {
+            <span class="badge bg-primary">Chuyển khoản</span>
+        }
+    }
+</text>,
+style: "align-middle text-center"),
+grid.Column("DiaChiNhanHang", "Địa chỉ nhận hàng", style: "align-middle"),
+grid.Column("TongTien", "Tổng tiền",
+format: @<text>@String.Format("{0:N0} VNĐ", item.TongTien)</text>,
+style: "align-middle text-end"),
+grid.Column(header: "Thao tác",
+format: @<text>
+    <div class="btn-group" role="group">
+        <a href="@Url.Action("Details", new { id = item.MaDon })" class="btn btn-info btn-sm">
+            <i class="fas fa-info-circle"></i>&nbsp Chi tiết
+        </a>
+        <a href="@Url.Action("Edit", new { id = item.MaDon })" class="btn btn-warning btn-sm">
+            <i class="fas fa-edit"></i>&nbsp Sửa
+        </a>
+        <a href="@Url.Action("Delete", new { id = item.MaDon })" class="btn btn-danger btn-sm">
+            <i class="fas fa-trash"></i>&nbsp Xóa
+        </a>
+    </div>
+</text>,
+style: "text-center align-middle")
+)
+)
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+
+    .page-header {
+        background: linear-gradient(135deg, #4e73df, #224abe);
+        padding: 1.5rem;
+        border-radius: 0.5rem;
+        margin-bottom: 2rem;
+    }
+
+        .page-header h2 {
+            color: white;
+            margin: 0;
+            font-size: 1.75rem;
+        }
+
+    .breadcrumb {
+        background: #f8f9fa;
+        padding: 15px;
+        border-radius: 5px;
+        margin-bottom: 25px;
+    }
+
+    .breadcrumb-item a {
+        color: #4e73df;
+    }
+    .table.table-hover.table-bordered th,
+    .table.table-hover.table-bordered thead tr th {
+        color: white !important;
+        font-weight: bold !important;
+    }
+
+    .custom-table th {
+        color: white !important;
+    }
+
+        .custom-table th a {
+            color: white !important;
+        }
+    /* Giữ nguyên các style từ trang Loại hàng và thêm một số style mới */
+    .badge {
+        font-size: 0.875rem;
+        padding: 0.5em 0.75em;
+    }
+
+    .text-end {
+        text-align: right !important;
+    }
+
+    /* Thêm animation cho badges */
+    .badge {
+        transition: all 0.3s ease;
+    }
+
+        .badge:hover {
+            transform: scale(1.1);
+        }
+
+    /* Style cho số tiền */
+    .text-end {
+        font-weight: 600;
+        color: #2c3e50;
+    }
+</style>

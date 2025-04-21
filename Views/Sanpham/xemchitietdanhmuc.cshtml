@@ -1,0 +1,209 @@
+﻿@using FashionStore.Models;
+@model List<SanPham>
+
+@{
+    ViewBag.Title = "xemchitietdanhmuc";
+    Layout = "~/Views/Shared/_LayoutClient2.cshtml";
+}
+
+
+<section class="py-1">
+    <center>
+        <h3 class="section-title">
+            DANH MỤC SẢN PHẨM
+        </h3>
+    </center>
+    <div class="container px-4 px-lg-5 mt-5">
+        <div class="row gx-4 gx-lg-5 row-cols-2 row-cols-md-3 row-cols-xl-4 justify-content-center">
+            @foreach (var item in Model)
+            {
+                <div class="col mb-5">
+                    <div class="card">
+                        <!-- Product image-->
+                        <a href="@Url.Action("xemchitiet", new {@MaSP=item.MaSP })" class="product-link">
+                            <div class="product-image-container">
+                                <img src="@Url.Action("GetProductImage", "Sanpham", new { imageName = item.AnhSP })"
+                                     class="product-image"
+                                     alt="@item.TenSP" />
+                            </div>
+                        </a>
+                        <!-- Product details-->
+                        <div class="card-body p-4">
+                            <div class="text-center">
+                                <!-- Product name-->
+                                <h5 class="product-name fw-bolder">@item.TenSP</h5>
+                                <!-- Product price-->
+                                <span class="price">Giá: @String.Format("{0:0,0}", @item.GiaBan) VND</span>
+                            </div>
+                        </div>
+                        <!-- Product actions-->
+                        <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
+                            <div class="text-center">
+                                @using (Html.BeginForm("ThemGioHang", "Giohang", new { @iMaSP = item.MaSP, @strURL = Request.Url.ToString() }))
+                                {
+                                    <button type="submit" class="btn-add-to-cart">
+                                        <div class="btn-content">
+                                            <i class="fas fa-shopping-cart"></i>
+                                            <span class="btn-text">Thêm vào giỏ hàng</span>
+                                        </div>
+                                    </button>
+                                }
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</section>
+
+<style>
+    .section-title {
+        color: #2c3e50;
+        font-family: 'Crimson Text', serif;
+        font-size: 30px;
+        font-weight: 700;
+        margin: 20px 0;
+        position: relative;
+        display: inline-block;
+        padding-bottom: 10px;
+    }
+
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 60%;
+            height: 2px;
+            background: linear-gradient(to right, transparent, #3498db, transparent);
+        }
+
+    .product-image-container {
+        position: relative;
+        width: 100%;
+        height: 250px;
+        overflow: hidden;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 10px;
+        background-color: #fff;
+    }
+
+    .product-image {
+        max-width: 100%;
+        max-height: 100%;
+        object-fit: contain;
+        transition: transform 0.3s ease;
+    }
+
+    .product-link:hover .product-image {
+        transform: scale(1.05);
+    }
+
+    .card {
+        border: 1px solid #e1e8ed;
+        transition: all 0.3s ease;
+        border-radius: 12px;
+        overflow: hidden;
+        background: #fff;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+    }
+
+        .card:hover {
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            transform: translateY(-2px);
+        }
+
+    .product-name {
+        color: #2c3e50;
+        font-size: 1rem;
+        font-weight: 600;
+        height: 48px;
+        overflow: hidden;
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        margin-bottom: 10px;
+        transition: color 0.3s ease;
+    }
+
+        .product-name:hover {
+            color: #3498db;
+        }
+
+    .price {
+        color: #e74c3c;
+        font-weight: 700;
+        font-size: 1.1rem;
+        display: block;
+        margin: 10px 0;
+    }
+
+    .btn-add-to-cart {
+        width: 100%;
+        padding: 0;
+        border: none;
+        background: none;
+        position: relative;
+        overflow: hidden;
+        cursor: pointer;
+    }
+
+    .btn-content {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: linear-gradient(45deg, #3498db, #2980b9);
+        color: white;
+        padding: 12px 24px;
+        border-radius: 25px;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+        gap: 8px;
+    }
+
+    .btn-add-to-cart:hover .btn-content {
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(52, 152, 219, 0.4);
+    }
+
+    .btn-add-to-cart:active .btn-content {
+        transform: translateY(0);
+        box-shadow: 0 2px 8px rgba(52, 152, 219, 0.4);
+    }
+
+    .btn-text {
+        font-weight: 600;
+        letter-spacing: 0.5px;
+    }
+
+    .fas.fa-shopping-cart {
+        font-size: 1rem;
+    }
+
+    /* Thêm hiệu ứng ripple khi click */
+    .btn-add-to-cart::after {
+        content: '';
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        top: 0;
+        left: 0;
+        pointer-events: none;
+        background-image: radial-gradient(circle, rgba(255, 255, 255, 0.3) 10%, transparent 10.01%);
+        background-repeat: no-repeat;
+        background-position: 50%;
+        transform: scale(10, 10);
+        opacity: 0;
+        transition: transform 0.5s, opacity 0.5s;
+    }
+
+    .btn-add-to-cart:active::after {
+        transform: scale(0, 0);
+        opacity: 0.3;
+        transition: 0s;
+    }
+</style>
+

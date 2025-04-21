@@ -1,0 +1,140 @@
+﻿@model FashionStore.Models.TaiKhoan
+
+@{
+    ViewBag.Title = "Profile";
+    Layout = "~/Views/Shared/_LayoutClient2.cshtml";
+}
+
+<style>
+    .profile-container {
+        max-width: 1000px;
+        margin: 40px auto;
+        padding: 30px;
+        background: #fff;
+        border-radius: 15px;
+        box-shadow: 0 0 20px rgba(0,0,0,0.1);
+    }
+
+    .profile-header {
+        text-align: center;
+        margin-bottom: 40px;
+        padding-bottom: 20px;
+        border-bottom: 2px solid #f0f0f0;
+    }
+
+    .profile-title {
+        color: #003366;
+        font-size: 28px;
+        font-weight: 600;
+        margin-bottom: 10px;
+    }
+
+    .profile-table {
+        width: 100%;
+        border-collapse: separate;
+        border-spacing: 0;
+        margin-bottom: 30px;
+    }
+
+        .profile-table th {
+            background-color: #003366;
+            color: white;
+            padding: 15px;
+            font-weight: 500;
+            text-align: left;
+            border-top: 1px solid #dee2e6;
+        }
+
+        .profile-table td {
+            padding: 20px 15px;
+            border-bottom: 1px solid #dee2e6;
+            color: #555;
+        }
+
+        .profile-table tr:hover {
+            background-color: #f8f9fa;
+        }
+
+    .profile-actions {
+        text-align: right;
+        margin-top: 30px;
+    }
+
+    .btn-profile {
+        padding: 10px 20px;
+        border-radius: 5px;
+        font-weight: 500;
+        text-decoration: none;
+        margin-left: 10px;
+        transition: all 0.3s ease;
+    }
+
+    .btn-orders {
+        background-color: #003366;
+        color: white;
+        border: none;
+    }
+
+    .btn-edit {
+        background-color: #6c757d;
+        color: white;
+        border: none;
+    }
+
+    .btn-profile:hover {
+        opacity: 0.9;
+        transform: translateY(-2px);
+    }
+
+    .profile-info-item {
+        display: flex;
+        margin-bottom: 15px;
+        padding: 15px;
+        background: #f8f9fa;
+        border-radius: 8px;
+    }
+
+    .info-label {
+        width: 150px;
+        font-weight: 600;
+        color: #003366;
+    }
+
+    .info-value {
+        flex: 1;
+        color: #555;
+    }
+</style>
+
+<div class="profile-container">
+    <div class="profile-header">
+        <h2 class="profile-title">Thông tin cá nhân</h2>
+    </div>
+
+    <div class="profile-content">
+        <div class="profile-info-item">
+            <div class="info-label">Họ & Tên:</div>
+            <div class="info-value">@Html.DisplayFor(model => model.HoTen)</div>
+        </div>
+
+        <div class="profile-info-item">
+            <div class="info-label">Email:</div>
+            <div class="info-value">@Html.DisplayFor(model => model.Email)</div>
+        </div>
+
+        <div class="profile-info-item">
+            <div class="info-label">Số điện thoại:</div>
+            <div class="info-value">@Html.DisplayFor(model => model.DienThoai)</div>
+        </div>
+
+        <div class="profile-info-item">
+            <div class="info-label">Địa chỉ:</div>
+            <div class="info-value">@Html.DisplayFor(model => model.DiaChi)</div>
+        </div>
+
+        <div class="profile-actions">
+            @Html.ActionLink("Xem đơn hàng", "Index", "Donhang", null, new { @class = "btn-profile btn-orders" })
+            @Html.ActionLink("Chỉnh sửa hồ sơ", "Edit", new { id = Model.MaNguoiDung }, new { @class = "btn-profile btn-edit" })
+        </div>
+    </div>
+</div>

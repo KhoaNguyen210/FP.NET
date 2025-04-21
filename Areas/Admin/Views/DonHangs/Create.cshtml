@@ -1,0 +1,331 @@
+﻿@model FashionStore.Models.DonHang
+
+@{
+    ViewBag.Title = "Tạo đơn hàng mới";
+    Layout = "~/Areas/Admin/Views/Shared/_LayoutAdmin.cshtml";
+}
+
+<div class="container-fluid">
+    <div class="page-header">
+        <h2><i class="fas fa-file-invoice me-2"></i>&nbsp Tạo đơn hàng mới</h2>
+    </div>
+
+    <div class="card">
+        <div class="card-body">
+            <!-- Breadcrumb -->
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item">
+                        <a href="/Admin/Home/Index" class="text-decoration-none">
+                            <i class="fas fa-home me-1"></i>&nbsp Trang chủ
+                        </a>
+                    </li>
+                    <li class="breadcrumb-item">
+                        <a href="/Admin/DonHangs" class="text-decoration-none">
+                            <i class="fas fa-file-invoice me-1"></i>&nbsp Đơn hàng
+                        </a>
+                    </li>
+                    <li class="breadcrumb-item active">
+                        <i class="fas fa-plus me-1"></i>&nbsp Tạo mới
+                    </li>
+                </ol>
+            </nav>
+
+            @using (Html.BeginForm("Create", "DonHangs", FormMethod.Post, new { @class = "needs-validation", id = "createOrderForm" }))
+            {
+                @Html.AntiForgeryToken()
+
+                <div class="row">
+                    <!-- Thông tin đơn hàng -->
+                    <div class="col-md-6">
+                        <div class="section-divider">
+                            <h5 class="text-primary mb-4">
+                                <i class="fas fa-info-circle me-2"></i>&nbsp Thông tin đơn hàng
+                            </h5>
+
+                            <div class="form-group mb-4">
+                                @Html.LabelFor(model => model.NgayDat, "Ngày đặt", new { @class = "form-label required" })
+                                <div class="input-group">
+                                    <span class="input-group-text bg-light">
+                                        <i class="fas fa-calendar"></i>
+                                    </span>
+                                    @Html.EditorFor(model => model.NgayDat, new { htmlAttributes = new { @class = "form-control form-control-lg", type = "date" } })
+                                </div>
+                                <div class="invalid-feedback">Vui lòng chọn ngày đặt</div>
+                            </div>
+
+                            <div class="form-group mb-4">
+                                @Html.LabelFor(model => model.TinhTrang, "Tình trạng", new { @class = "form-label required" })
+                                <div class="input-group">
+                                    <span class="input-group-text bg-light">
+                                        <i class="fas fa-tasks"></i>
+                                    </span>
+                                    @Html.DropDownListFor(model => model.TinhTrang,
+                                        new SelectList(new[]
+                                        {
+                                            new { Value = "Chờ xác nhận", Text = "Chờ xác nhận" },
+                                            new { Value = "Đã xác nhận", Text = "Đã xác nhận" },
+                                            new { Value = "Đang giao", Text = "Đang giao" },
+                                            new { Value = "Đã giao", Text = "Đã giao" },
+                                            new { Value = "Đã hủy", Text = "Đã hủy" }
+                                        }, "Value", "Text"),
+                                        "-- Chọn tình trạng --", new { @class = "form-select form-select-lg" })
+                                </div>
+                                <div class="invalid-feedback">Vui lòng chọn tình trạng</div>
+                            </div>
+
+                            <div class="form-group mb-4">
+                                @Html.LabelFor(model => model.ThanhToan, "Thanh toán", new { @class = "form-label required" })
+                                <div class="input-group">
+                                    <span class="input-group-text bg-light">
+                                        <i class="fas fa-money-bill"></i>
+                                    </span>
+                                    @Html.DropDownListFor(model => model.ThanhToan,
+                                        new SelectList(new[]
+                                        {
+                                            new { Value = "Chưa thanh toán", Text = "Chưa thanh toán" },
+                                            new { Value = "Đã thanh toán", Text = "Đã thanh toán" }
+                                        }, "Value", "Text"),
+                                        "-- Chọn trạng thái thanh toán --", new { @class = "form-select form-select-lg" })
+                                </div>
+                                <div class="invalid-feedback">Vui lòng chọn trạng thái thanh toán</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Thông tin giao hàng -->
+                    <div class="col-md-6">
+                        <div class="section-divider">
+                            <h5 class="text-primary mb-4">
+                                <i class="fas fa-shipping-fast me-2"></i>&nbsp Thông tin giao hàng
+                            </h5>
+
+                            <div class="form-group mb-4">
+                                @Html.LabelFor(model => model.MaNguoiDung, "Khách hàng", new { @class = "form-label required" })
+                                <div class="input-group">
+                                    <span class="input-group-text bg-light">
+                                        <i class="fas fa-user"></i>
+                                    </span>
+                                    @Html.DropDownList("MaNguoiDung", null, "-- Chọn khách hàng --", new { @class = "form-select form-select-lg" })
+                                </div>
+                                <div class="invalid-feedback">Vui lòng chọn khách hàng</div>
+                            </div>
+
+                            <div class="form-group mb-4">
+                                @Html.LabelFor(model => model.DiaChiNhanHang, "Địa chỉ nhận hàng", new { @class = "form-label required" })
+                                <div class="input-group">
+                                    <span class="input-group-text bg-light">
+                                        <i class="fas fa-map-marker-alt"></i>
+                                    </span>
+                                    @Html.TextAreaFor(model => model.DiaChiNhanHang, new { @class = "form-control form-control-lg", rows = "3", placeholder = "Nhập địa chỉ nhận hàng" })
+                                </div>
+                                <div class="invalid-feedback">Vui lòng nhập địa chỉ nhận hàng</div>
+                            </div>
+
+                            <div class="form-group mb-4">
+                                @Html.LabelFor(model => model.TongTien, "Tổng tiền", new { @class = "form-label required" })
+                                <div class="input-group">
+                                    <span class="input-group-text bg-light">
+                                        <i class="fas fa-dollar-sign"></i>
+                                    </span>
+                                    @Html.TextBoxFor(model => model.TongTien, new { @class = "form-control form-control-lg", placeholder = "Nhập tổng tiền" })
+                                    <span class="input-group-text">VNĐ</span>
+                                </div>
+                                <div class="invalid-feedback">Vui lòng nhập tổng tiền hợp lệ</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Buttons -->
+                <div class="form-group mt-4 d-flex gap-3">
+                    <button type="submit" class="btn btn-primary btn-lg">
+                        <i class="fas fa-save me-2"></i>&nbsp Tạo đơn hàng
+                    </button>
+                    <a href="/Admin/DonHangs" class="btn btn-light btn-lg">
+                        <i class="fas fa-times me-2"></i>&nbsp Hủy
+                    </a>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+<style>
+    .page-header {
+        background: linear-gradient(135deg, #4e73df, #224abe);
+        padding: 1.5rem;
+        border-radius: 0.5rem;
+        margin-bottom: 2rem;
+    }
+
+        .page-header h2 {
+            color: white;
+            margin: 0;
+            font-size: 1.75rem;
+        }
+
+    .breadcrumb {
+        background: #f8f9fa;
+        padding: 15px;
+        border-radius: 5px;
+        margin-bottom: 25px;
+    }
+
+    .breadcrumb-item a {
+        color: #4e73df;
+        text-decoration: none;
+    }
+
+    .section-divider {
+        padding: 20px;
+        background: #fff;
+        border-radius: 5px;
+        box-shadow: 0 0 10px rgba(0,0,0,0.05);
+    }
+
+    .form-label.required:after {
+        content: "*";
+        color: red;
+        margin-left: 4px;
+    }
+
+    .input-group-text {
+        border: none;
+    }
+
+    .form-control:focus,
+    .form-select:focus {
+        border-color: #4e73df;
+        box-shadow: 0 0 0 0.2rem rgba(78,115,223,0.25);
+    }
+</style>
+
+@section Scripts {
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script>
+        $(document).ready(function () {
+            // Form validation
+            $('#createOrderForm').on('submit', async function (e) {
+                e.preventDefault();
+                let isValid = true;
+
+                // Validate Ngày đặt
+                if ($('#NgayDat').val() === '') {
+                    $('#NgayDat').addClass('is-invalid');
+                    isValid = false;
+                } else {
+                    $('#NgayDat').removeClass('is-invalid');
+                }
+
+                // Validate Tình trạng
+                if ($('#TinhTrang').val() === '') {
+                    $('#TinhTrang').addClass('is-invalid');
+                    isValid = false;
+                } else {
+                    $('#TinhTrang').removeClass('is-invalid');
+                }
+
+                // Validate Thanh toán
+                if ($('#ThanhToan').val() === '') {
+                    $('#ThanhToan').addClass('is-invalid');
+                    isValid = false;
+                } else {
+                    $('#ThanhToan').removeClass('is-invalid');
+                }
+
+                // Validate Khách hàng
+                if ($('#MaNguoiDung').val() === '') {
+                    $('#MaNguoiDung').addClass('is-invalid');
+                    isValid = false;
+                } else {
+                    $('#MaNguoiDung').removeClass('is-invalid');
+                }
+
+                // Validate Địa chỉ nhận hàng
+                if ($('#DiaChiNhanHang').val().trim() === '') {
+                    $('#DiaChiNhanHang').addClass('is-invalid');
+                    isValid = false;
+                } else {
+                    $('#DiaChiNhanHang').removeClass('is-invalid');
+                }
+       
+                // Validate Tổng tiền
+                const tongTienInput = $('#TongTien').val();
+                const tongTienValue = tongTienInput.replace(/,/g, ''); // Loại bỏ dấu phẩy
+                if (tongTienInput === '' || isNaN(tongTienValue) || parseFloat(tongTienValue) < 0) {
+                    $('#TongTien').addClass('is-invalid');
+                    isValid = false;
+                } else {
+                    $('#TongTien').removeClass('is-invalid');
+                }
+
+
+                if (!isValid) {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Lỗi!',
+                        text: 'Vui lòng điền đầy đủ thông tin bắt buộc',
+                        confirmButtonText: 'Đóng'
+                    });
+                    return false;
+                }
+
+                try {
+                    // Show loading state
+                    await Swal.fire({
+                        title: 'Đang xử lý...',
+                        text: 'Vui lòng chờ trong giây lát',
+                        allowOutsideClick: false,
+                        showConfirmButton: false,
+                        didOpen: () => {
+                            Swal.showLoading();
+                        },
+                        timer: 1000
+                    });
+
+                    // Submit form
+                    const formData = $(this).serialize();
+                    const response = await $.ajax({
+                        url: this.action,
+                        type: 'POST',
+                        data: formData
+                    });
+
+                    // Hiển thị thông báo thành công
+                    await Swal.fire({
+                        icon: 'success',
+                        title: 'Thành công!',
+                        text: 'Tạo đơn hàng mới thành công',
+                        timer: 1500,
+                        showConfirmButton: false
+                    });
+
+                    // Chuyển hướng về trang Index
+                    window.location.href = '/Admin/DonHangs';
+
+                } catch (error) {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Lỗi!',
+                        text: 'Có lỗi xảy ra khi tạo đơn hàng. Vui lòng thử lại!',
+                        confirmButtonText: 'Đóng'
+                    });
+                }
+            });
+
+            // Reset validation on input
+            $('input, select, textarea').on('input change', function () {
+                $(this).removeClass('is-invalid');
+            });
+
+            // Format currency input for TongTien
+            $('#TongTien').on('input', function () {
+                let value = $(this).val().replace(/\D/g, "")
+                    .replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+                $(this).val(value);
+            });
+        });
+    </script>
+}
+

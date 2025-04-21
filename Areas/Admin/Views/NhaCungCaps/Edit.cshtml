@@ -1,0 +1,222 @@
+﻿@model FashionStore.Models.NhaCungCap
+
+@{
+    ViewBag.Title = "Sửa nhà cung cấp";
+    Layout = "~/Areas/Admin/Views/Shared/_LayoutAdmin.cshtml";
+}
+
+<div class="container-fluid">
+    <div class="page-header">
+        <h2><i class="fas fa-edit me-2"></i>&nbsp Sửa nhà cung cấp</h2>
+    </div>
+
+    <div class="card">
+        <div class="card-body">
+            <!-- Breadcrumb -->
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item">
+                        <a href="/Admin/Home/Index" class="text-decoration-none">
+                            <i class="fas fa-home me-1"></i>&nbsp Trang chủ
+                        </a>
+                    </li>
+                    <li class="breadcrumb-item">
+                        <a href="/Admin/NhaCungCaps" class="text-decoration-none">
+                            <i class="fas fa-truck me-1"></i>&nbsp Nhà cung cấp
+                        </a>
+                    </li>
+                    <li class="breadcrumb-item active">
+                        <i class="fas fa-edit me-1"></i>&nbsp Sửa nhà cung cấp
+                    </li>
+                </ol>
+            </nav>
+
+            @using (Html.BeginForm("Edit", "NhaCungCaps", FormMethod.Post, new { @class = "needs-validation", id = "editSupplierForm" }))
+            {
+                @Html.AntiForgeryToken()
+                @Html.HiddenFor(model => model.MaNCC)
+
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="section-divider">
+                            <h5 class="text-primary mb-4">
+                                <i class="fas fa-info-circle me-2"></i>&nbsp Thông tin nhà cung cấp
+                            </h5>
+
+                            <div class="form-group mb-4">
+                                @Html.LabelFor(model => model.TenNCC, "Tên nhà cung cấp", new { @class = "form-label required" })
+                                <div class="input-group">
+                                    <span class="input-group-text bg-light">
+                                        <i class="fas fa-building"></i>
+                                    </span>
+                                    @Html.TextBoxFor(model => model.TenNCC, new { @class = "form-control form-control-lg", placeholder = "Nhập tên nhà cung cấp" })
+                                </div>
+                                <div class="invalid-feedback">Vui lòng nhập tên nhà cung cấp</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Buttons -->
+                <div class="form-group mt-4 d-flex gap-3">
+                    <button type="submit" class="btn btn-primary btn-lg">
+                        <i class="fas fa-save me-2"></i>&nbsp Lưu thay đổi
+                    </button>
+                    <a href="/Admin/NhaCungCaps" class="btn btn-light btn-lg">
+                        <i class="fas fa-times me-2"></i>&nbsp Hủy
+                    </a>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+<style>
+    /* Card styling */
+    .card {
+        border-radius: 10px;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+    }
+
+    /* Page header */
+    .page-header {
+        background: linear-gradient(135deg, #4e73df, #224abe);
+        padding: 1.5rem;
+        border-radius: 0.5rem;
+        margin-bottom: 2rem;
+    }
+
+        .page-header h2 {
+            color: white;
+            margin: 0;
+            font-size: 1.75rem;
+        }
+
+    /* Form controls */
+    .form-control {
+        border-radius: 5px;
+        padding: 10px 15px;
+        border: 1px solid #ddd;
+    }
+
+    .input-group-text {
+        background: #f8f9fa;
+        border: 1px solid #ddd;
+    }
+
+    /* Labels */
+    .form-label {
+        font-weight: 600;
+        color: #2c3e50;
+        margin-bottom: 8px;
+    }
+
+    .required:after {
+        content: " *";
+        color: #e74a3b;
+    }
+
+    /* Section divider */
+    .section-divider {
+        padding: 20px;
+        background: white;
+        border-radius: 10px;
+        margin-bottom: 20px;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+    }
+
+    /* Breadcrumb */
+    .breadcrumb {
+        background: #f8f9fa;
+        padding: 15px;
+        border-radius: 5px;
+        margin-bottom: 25px;
+    }
+
+    .breadcrumb-item a {
+        color: #4e73df;
+        text-decoration: none;
+    }
+</style>
+
+@section Scripts {
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script>
+        $(document).ready(function () {
+            // Form validation
+            $('#editSupplierForm').on('submit', async function (e) {
+                e.preventDefault();
+                let isValid = true;
+
+                // Validate Tên nhà cung cấp
+                if ($('#TenNCC').val().trim() === '') {
+                    $('#TenNCC').addClass('is-invalid');
+                    isValid = false;
+                } else {
+                    $('#TenNCC').removeClass('is-invalid');
+                }
+
+                if (!isValid) {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Lỗi!',
+                        text: 'Vui lòng nhập tên nhà cung cấp',
+                        confirmButtonText: 'Đóng'
+                    });
+                    return false;
+                }
+
+                try {
+                    // Show loading state
+                    await Swal.fire({
+                        title: 'Đang xử lý...',
+                        text: 'Vui lòng chờ trong giây lát',
+                        allowOutsideClick: false,
+                        showConfirmButton: false,
+                        didOpen: () => {
+                            Swal.showLoading();
+                        },
+                        timer: 1000
+                    });
+
+                    // Submit form
+                    const formData = new FormData(this);
+
+                    // Gửi request AJAX
+                    const response = await $.ajax({
+                        url: this.action,
+                        type: 'POST',
+                        data: formData,
+                        processData: false,
+                        contentType: false
+                    });
+
+                    // Hiển thị thông báo thành công
+                    await Swal.fire({
+                        icon: 'success',
+                        title: 'Thành công!',
+                        text: 'Cập nhật nhà cung cấp thành công',
+                        timer: 1500,
+                        showConfirmButton: false
+                    });
+
+                    // Chuyển hướng về trang Index
+                    window.location.href = '/Admin/NhaCungCaps';
+
+                } catch (error) {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Lỗi!',
+                        text: 'Có lỗi xảy ra khi cập nhật nhà cung cấp. Vui lòng thử lại!',
+                        confirmButtonText: 'Đóng'
+                    });
+                }
+            });
+
+            // Reset validation khi nhập liệu
+            $('input').on('input', function () {
+                $(this).removeClass('is-invalid');
+            });
+        });
+    </script>
+}

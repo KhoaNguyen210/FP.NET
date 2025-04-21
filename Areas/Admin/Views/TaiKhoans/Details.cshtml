@@ -1,0 +1,177 @@
+﻿@model FashionStore.Models.TaiKhoan
+
+@{
+    ViewBag.Title = "Chi tiết tài khoản";
+    Layout = "~/Areas/Admin/Views/Shared/_LayoutAdmin.cshtml";
+}
+
+<style>
+    .account-details {
+        background: white;
+        border-radius: 10px;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        padding: 30px;
+    }
+
+    .details-header {
+        background: linear-gradient(135deg, #4e73df, #224abe);
+        color: white;
+        padding: 20px;
+        border-radius: 10px;
+        margin-bottom: 25px;
+    }
+
+    .breadcrumb {
+        background: #f8f9fa;
+        padding: 15px;
+        border-radius: 5px;
+        margin-bottom: 25px;
+    }
+
+    .breadcrumb-item a {
+        color: #4e73df;
+        text-decoration: none;
+    }
+
+    .info-container {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 20px;
+    }
+
+    .info-group {
+        margin-bottom: 20px;
+        padding: 15px;
+        background: #f8f9fc;
+        border-radius: 8px;
+        border-left: 4px solid #4e73df;
+    }
+
+    .info-label {
+        font-weight: 600;
+        color: #4e73df;
+        margin-bottom: 8px;
+        font-size: 0.9rem;
+        text-transform: uppercase;
+    }
+
+    .info-value {
+        color: #2c3e50;
+        font-size: 1.1rem;
+        padding: 8px 0;
+    }
+
+    .btn-back {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        color: #4e73df;
+        text-decoration: none;
+        padding: 10px 20px;
+        border-radius: 5px;
+        transition: all 0.3s ease;
+        margin-top: 20px;
+    }
+
+        .btn-back:hover {
+            background: #4e73df;
+            color: white;
+        }
+
+    .action-buttons {
+        margin-top: 30px;
+        display: flex;
+        gap: 15px;
+    }
+
+    .btn-action {
+        padding: 12px 25px;
+        border-radius: 5px;
+        color: white;
+        text-decoration: none;
+        transition: all 0.3s ease;
+    }
+
+    .btn-edit {
+        background: #1cc88a;
+    }
+
+        .btn-edit:hover {
+            background: #169b6b;
+            color: white;
+        }
+</style>
+
+<div class="details-header">
+    <h2><i class="fas fa-user mr-2"></i> Chi tiết tài khoản</h2>
+</div>
+
+<div class="account-details">
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item">
+                <a href="/Admin/Home/Index">
+                    <i class="fas fa-home"></i> Trang chủ
+                </a>
+            </li>
+            <li class="breadcrumb-item">
+                <a href="/Admin/TaiKhoans">
+                    <i class="fas fa-users"></i> Tài khoản
+                </a>
+            </li>
+            <li class="breadcrumb-item active">Chi tiết tài khoản</li>
+        </ol>
+    </nav>
+
+    <div class="info-container">
+        <div class="info-group">
+            <div class="info-label">
+                <i class="fas fa-user-tag mr-2"></i> Phân quyền
+            </div>
+            <div class="info-value">
+                @Html.DisplayFor(model => model.PhanQuyen.TenQuyen)
+            </div>
+        </div>
+
+        <div class="info-group">
+            <div class="info-label">
+                <i class="fas fa-user mr-2"></i> Họ tên
+            </div>
+            <div class="info-value">
+                @Html.DisplayFor(model => model.HoTen)
+            </div>
+        </div>
+
+        <div class="info-group">
+            <div class="info-label">
+                <i class="fas fa-envelope mr-2"></i> Email
+            </div>
+            <div class="info-value">
+                @Html.DisplayFor(model => model.Email)
+            </div>
+        </div>
+
+        <div class="info-group">
+            <div class="info-label">
+                <i class="fas fa-phone mr-2"></i> Điện thoại
+            </div>
+            <div class="info-value">
+                @Html.DisplayFor(model => model.DienThoai)
+            </div>
+        </div>
+
+        <div class="info-group">
+            <div class="info-label">
+                <i class="fas fa-map-marker-alt mr-2"></i> Địa chỉ
+            </div>
+            <div class="info-value">
+                @Html.DisplayFor(model => model.DiaChi)
+            </div>
+        </div>
+    </div>
+
+
+    <a href="@Url.Action("Index")" class="btn-back">
+        <i class="fas fa-arrow-left"></i> Trở về danh sách
+    </a>
+</div>

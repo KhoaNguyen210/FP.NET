@@ -1,0 +1,339 @@
+﻿@model FashionStore.Models.TaiKhoan
+
+@{
+    ViewBag.Title = "Sửa tài khoản";
+    Layout = "~/Areas/Admin/Views/Shared/_LayoutAdmin.cshtml";
+}
+
+<div class="container-fluid">
+    <div class="page-header">
+        <h2><i class="fas fa-user-edit me-2"></i>&nbsp Sửa tài khoản</h2>
+    </div>
+
+    <div class="card">
+        <div class="card-body">
+            <!-- Breadcrumb -->
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item">
+                        <a href="/Admin/Home/Index" class="text-decoration-none">
+                            <i class="fas fa-home me-1"></i>&nbsp Trang chủ
+                        </a>
+                    </li>
+                    <li class="breadcrumb-item">
+                        <a href="/Admin/TaiKhoans" class="text-decoration-none">
+                            <i class="fas fa-users me-1"></i>&nbsp Tài khoản
+                        </a>
+                    </li>
+                    <li class="breadcrumb-item active">
+                        <i class="fas fa-user-edit me-1"></i>&nbsp Sửa tài khoản
+                    </li>
+                </ol>
+            </nav>
+
+            @using (Html.BeginForm("Edit", "TaiKhoans", FormMethod.Post, new { @class = "needs-validation", id = "editAccountForm" }))
+            {
+                @Html.AntiForgeryToken()
+                @Html.HiddenFor(model => model.MaNguoiDung)
+
+                <div class="row">
+                    <!-- Thông tin cơ bản -->
+                    <div class="col-md-6">
+                        <div class="section-divider">
+                            <h5 class="text-primary mb-4">
+                                <i class="fas fa-info-circle me-2"></i>&nbsp Thông tin cơ bản
+                            </h5>
+
+                            <div class="form-group mb-4">
+                                @Html.LabelFor(model => model.HoTen, "Họ tên", new { @class = "form-label required" })
+                                <div class="input-group">
+                                    <span class="input-group-text bg-light">
+                                        <i class="fas fa-user"></i>
+                                    </span>
+                                    @Html.TextBoxFor(model => model.HoTen, new { @class = "form-control form-control-lg" })
+                                </div>
+                                <div class="invalid-feedback">Vui lòng nhập họ tên</div>
+                            </div>
+
+                            <div class="form-group mb-4">
+                                @Html.LabelFor(model => model.Email, "Email", new { @class = "form-label required" })
+                                <div class="input-group">
+                                    <span class="input-group-text bg-light">
+                                        <i class="fas fa-envelope"></i>
+                                    </span>
+                                    @Html.TextBoxFor(model => model.Email, new { @class = "form-control form-control-lg" })
+                                </div>
+                                <div class="invalid-feedback">Vui lòng nhập email hợp lệ</div>
+                            </div>
+
+                            <div class="form-group mb-4">
+                                @Html.LabelFor(model => model.DienThoai, "Số điện thoại", new { @class = "form-label required" })
+                                <div class="input-group">
+                                    <span class="input-group-text bg-light">
+                                        <i class="fas fa-phone"></i>
+                                    </span>
+                                    @Html.TextBoxFor(model => model.DienThoai, new { @class = "form-control form-control-lg" })
+                                </div>
+                                <div class="invalid-feedback">Vui lòng nhập số điện thoại hợp lệ</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Thông tin bổ sung -->
+                    <div class="col-md-6">
+                        <div class="section-divider">
+                            <h5 class="text-primary mb-4">
+                                <i class="fas fa-cog me-2"></i>&nbsp Thông tin bổ sung
+                            </h5>
+
+                            <div class="form-group mb-4">
+                                @Html.LabelFor(model => model.MatKhau, "Mật khẩu", new { @class = "form-label required" })
+                                <div class="input-group">
+                                    <span class="input-group-text bg-light">
+                                        <i class="fas fa-lock"></i>
+                                    </span>
+                                    @Html.PasswordFor(model => model.MatKhau, new { @class = "form-control form-control-lg" })
+                                </div>
+                                <div class="invalid-feedback">Mật khẩu phải có ít nhất 6 ký tự</div>
+                            </div>
+
+                            <div class="form-group mb-4">
+                                @Html.LabelFor(model => model.IDQuyen, "Phân quyền", new { @class = "form-label required" })
+                                <div class="input-group">
+                                    <span class="input-group-text bg-light">
+                                        <i class="fas fa-user-shield"></i>
+                                    </span>
+                                    @Html.DropDownList("IDQuyen", null, new { @class = "form-select form-select-lg" })
+                                </div>
+                                <div class="invalid-feedback">Vui lòng chọn quyền</div>
+                            </div>
+
+                            <div class="form-group mb-4">
+                                @Html.LabelFor(model => model.DiaChi, "Địa chỉ", new { @class = "form-label required" })
+                                <div class="input-group">
+                                    <span class="input-group-text bg-light">
+                                        <i class="fas fa-map-marker-alt"></i>
+                                    </span>
+                                    @Html.TextAreaFor(model => model.DiaChi, new { @class = "form-control", rows = "3" })
+                                </div>
+                                <div class="invalid-feedback">Vui lòng nhập địa chỉ</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Buttons -->
+                <div class="form-group mt-4 d-flex gap-3">
+                    <button type="submit" class="btn btn-primary btn-lg">
+                        <i class="fas fa-save me-2"></i>&nbsp Lưu thay đổi
+                    </button>
+                    <a href="/Admin/TaiKhoans" class="btn btn-light btn-lg">
+                        <i class="fas fa-times me-2"></i>&nbsp Hủy
+                    </a>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+@section Styles {
+    <style>
+        /* Card styling */
+        .card {
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        }
+
+        /* Page header */
+        .page-header {
+            background: linear-gradient(135deg, #4e73df, #224abe);
+            padding: 1.5rem;
+            border-radius: 0.5rem;
+            margin-bottom: 2rem;
+        }
+
+            .page-header h2 {
+                color: white;
+                margin: 0;
+                font-size: 1.75rem;
+            }
+
+        /* Form controls */
+        .form-control, .form-select {
+            border-radius: 5px;
+            padding: 10px 15px;
+            border: 1px solid #ddd;
+        }
+
+        .input-group-text {
+            background: #f8f9fa;
+            border: 1px solid #ddd;
+        }
+
+        /* Labels */
+        .form-label {
+            font-weight: 600;
+            color: #2c3e50;
+            margin-bottom: 8px;
+        }
+
+        .required:after {
+            content: " *";
+            color: #e74a3b;
+        }
+
+        /* Section divider */
+        .section-divider {
+            padding: 20px;
+            background: white;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        }
+
+        /* Breadcrumb */
+        .breadcrumb {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 25px;
+        }
+
+        .breadcrumb-item a {
+            color: #4e73df;
+            text-decoration: none;
+        }
+    </style>
+}
+
+@section Scripts {
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script>
+        $(document).ready(function () {
+            // Chỉ cho phép nhập số trong trường điện thoại
+            $('#DienThoai').on('input', function () {
+                $(this).val($(this).val().replace(/[^0-9]/g, ''));
+            });
+
+            // Form validation
+            $('#editAccountForm').on('submit', async function (e) {
+                e.preventDefault();
+                let isValid = true;
+                let errorMessages = [];
+
+                // Validate Họ tên
+                if ($('#HoTen').val().trim() === '') {
+                    $('#HoTen').addClass('is-invalid');
+                    errorMessages.push('Họ tên không được để trống');
+                    isValid = false;
+                }
+
+                // Validate Email
+                const emailRegex = /^[^\s@@]+@@[^\s@@]+\.[^\s@@]+$/;
+                if ($('#Email').val().trim() === '') {
+                    $('#Email').addClass('is-invalid');
+                    errorMessages.push('Email không được để trống');
+                    isValid = false;
+                } else if (!emailRegex.test($('#Email').val())) {
+                    $('#Email').addClass('is-invalid');
+                    errorMessages.push('Email không đúng định dạng');
+                    isValid = false;
+                }
+
+                // Validate Số điện thoại
+                const phoneRegex = /^(0[3|5|7|8|9])+([0-9]{8})$/;
+                if ($('#DienThoai').val().trim() === '') {
+                    $('#DienThoai').addClass('is-invalid');
+                    errorMessages.push('Số điện thoại không được để trống');
+                    isValid = false;
+                } else if (!phoneRegex.test($('#DienThoai').val())) {
+                    $('#DienThoai').addClass('is-invalid');
+                    errorMessages.push('Số điện thoại không đúng định dạng');
+                    isValid = false;
+                }
+
+                // Validate Mật khẩu
+                if ($('#MatKhau').val().length < 6) {
+                    $('#MatKhau').addClass('is-invalid');
+                    errorMessages.push('Mật khẩu phải có ít nhất 6 ký tự');
+                    isValid = false;
+                }
+
+                // Validate Quyền
+                if ($('#IDQuyen').val() === '') {
+                    $('#IDQuyen').addClass('is-invalid');
+                    errorMessages.push('Vui lòng chọn quyền');
+                    isValid = false;
+                }
+
+                // Validate Địa chỉ
+                if ($('#DiaChi').val().trim() === '') {
+                    $('#DiaChi').addClass('is-invalid');
+                    errorMessages.push('Địa chỉ không được để trống');
+                    isValid = false;
+                }
+
+                if (!isValid) {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Lỗi!',
+                        html: errorMessages.join('<br>'),
+                        confirmButtonText: 'Đóng'
+                    });
+                    return false;
+                }
+
+                try {
+                    // Show loading state
+                    await Swal.fire({
+                        title: 'Đang xử lý...',
+                        text: 'Vui lòng chờ trong giây lát',
+                        allowOutsideClick: false,
+                        showConfirmButton: false,
+                        didOpen: () => {
+                            Swal.showLoading();
+                        },
+                        timer: 1000
+                    });
+
+                    // Submit form
+                    const formData = new FormData(this);
+
+                    // Gửi request AJAX
+                    const response = await $.ajax({
+                        url: this.action,
+                        type: 'POST',
+                        data: formData,
+                        processData: false,
+                        contentType: false
+                    });
+
+                    // Hiển thị thông báo thành công
+                    await Swal.fire({
+                        icon: 'success',
+                        title: 'Thành công!',
+                        text: 'Cập nhật tài khoản thành công',
+                        timer: 1500,
+                        showConfirmButton: false
+                    });
+
+                    // Chuyển hướng về trang Index
+                    window.location.href = '/Admin/TaiKhoans';
+
+                } catch (error) {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Lỗi!',
+                        text: 'Có lỗi xảy ra khi cập nhật tài khoản. Vui lòng thử lại!',
+                        confirmButtonText: 'Đóng'
+                    });
+                }
+            });
+
+            // Reset validation khi nhập liệu
+            $('input, select, textarea').on('input change', function () {
+                $(this).removeClass('is-invalid');
+            });
+        });
+    </script>
+}
